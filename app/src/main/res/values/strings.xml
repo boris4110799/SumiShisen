@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <resources>
     <string name="app_name">SumiShisen</string>
+
     <string name="text_A">A</string>
     <string name="text_B">B</string>
     <string name="text_C">C</string>
@@ -16,7 +17,9 @@
     <string name="text_M">M</string>
     <string name="text_N">N</string>
     <string name="text_O">O</string>
+    <string name="text_P">P</string>
     <string name="text_a">a</string>
+    <string name="text_apply">Apply</string>
     <string name="text_b">b</string>
     <string name="text_blank">-</string>
     <string name="text_box">Box</string>
@@ -34,12 +37,15 @@
     <string name="text_k">k</string>
     <string name="text_l">l</string>
     <string name="text_m">m</string>
+    <string name="text_match">Find\n%1$d\nmatch</string>
     <string name="text_n">n</string>
     <string name="text_next">Next</string>
     <string name="text_o">o</string>
     <string name="text_ok">OK</string>
+    <string name="text_p">p</string>
     <string name="text_pre">Pre</string>
     <string name="text_success">Success</string>
+    <string name="text_view">View</string>
     <string name="text_waiting">Waiting…</string>
     <string name="text_x">x</string>
     <string name="text_z">z</string>

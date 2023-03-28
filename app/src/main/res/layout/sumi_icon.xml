@@ -3,4 +3,4 @@
     android:layout_width="50dp"
     android:layout_height="50dp"
     android:layout_gravity="center"
-    android:background="@drawable/ic_sumi" />
+    android:background="@drawable/ic_sumi_design" />

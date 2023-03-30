@@ -141,7 +141,21 @@ class SumiWindow : Service() {
 				dataList = it.toList()
 			}
 			assetFd.close()
-			dataSet.addAll(dataList)
+			
+			for (i in dataList) {
+				var tempData : String
+				for (j in dataSet) {
+					tempData = compareData(i, j)
+					if (tempData.isNotEmpty()) {
+						if (tempData == i) {
+							dataSet.remove(j)
+							dataSet.add(i)
+						}
+						break
+					}
+				}
+			}
+			
 			var outputStr = ""
 			for (i in dataSet) {
 				outputStr += i
@@ -586,6 +600,19 @@ class SumiWindow : Service() {
 		if (inputStr == "-") return "x"
 		else if (inputStr == "Box") return "z"
 		return inputStr.lowercase()
+	}
+	
+	private fun compareData(aStr : String, bStr : String) : String {
+		val compareMap = mutableMapOf<Char, Char>()
+		for (i in aStr.indices) {
+			if (compareMap.containsKey(aStr[i])) {
+				if (compareMap[aStr[i]] != bStr[i]) return ""
+			}
+			else {
+				compareMap[aStr[i]] = bStr[i]
+			}
+		}
+		return if (aStr <= bStr) aStr else bStr
 	}
 	
 	/**

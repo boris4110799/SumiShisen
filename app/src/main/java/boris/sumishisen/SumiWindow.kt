@@ -19,7 +19,6 @@ import android.widget.Button
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.app.NotificationCompat
 import boris.sumishisen.databinding.SumiLayoutBinding
-import java.util.*
 import kotlin.math.abs
 import kotlin.math.roundToInt
 
@@ -80,18 +79,9 @@ class SumiWindow : Service() {
 	 */
 	private var matchStr = Array(66) { " " }
 	
-	//This is for calculating the answer
-	private val dx = intArrayOf(0, -1, 0, 1)
-	private val dy = intArrayOf(1, 0, -1, 0)
-	private val m = Array(8) { Array(13) { 'x' } }
-	private val mm = Array(8) { Array(13) { 'x' } }
-	private val n = Array(8) { Array(13) { false } }
-	private var rx : Int = 0
-	private var ry : Int = 0
-	private var q = LinkedList<Pair<Int, Int>>()
-	private var ans = LinkedList<Pair<Int, Int>>()
+	private val ans get() = MinigamesSolver.getAnswer()
 	private var ansInd = 0
-	private var status = -1
+	private var boardStatus = -1
 	
 	override fun onBind(intent : Intent) : IBinder? {
 		return null
@@ -414,8 +404,8 @@ class SumiWindow : Service() {
 			binding.textViewInfo.text = getString(R.string.text_waiting)
 			
 			val inputStr = outputHint()
-			status = if (cal(inputStr)) 1 else 0
-			if (status == 1) {
+			boardStatus = if (MinigamesSolver.cal(inputStr)) 1 else 0
+			if (boardStatus == 1) {
 				if (ans.size > 0) {
 					binding.textViewInfo.text = getString(R.string.text_success)
 					showAnswer(ansInd)
@@ -430,13 +420,13 @@ class SumiWindow : Service() {
 						it.write(outputStr.toByteArray())
 					}
 				}
-				else status = 0
+				else boardStatus = 0
 			}
-			if (status == 0) binding.textViewInfo.text = getString(R.string.text_fail)
+			if (boardStatus == 0) binding.textViewInfo.text = getString(R.string.text_fail)
 		}
 		//Show previous answer
 		binding.btnPre.setOnClickListener {
-			if (status == 1) {
+			if (boardStatus == 1) {
 				hideAnswer(ansInd)
 				if (ansInd > 0) ansInd -= 1
 				showAnswer(ansInd)
@@ -444,7 +434,7 @@ class SumiWindow : Service() {
 		}
 		//Show next answer
 		binding.btnNext.setOnClickListener {
-			if (status == 1) {
+			if (boardStatus == 1) {
 				hideAnswer(ansInd)
 				if (ansInd < ans.size/2-1) ansInd += 1
 				showAnswer(ansInd)
@@ -453,8 +443,8 @@ class SumiWindow : Service() {
 		//Close the answer mode
 		binding.btnClose.setOnClickListener {
 			viewInput()
-			if (status == 1) hideAnswer(ansInd)
-			status = -1
+			if (boardStatus == 1) hideAnswer(ansInd)
+			boardStatus = -1
 			ansInd = 0
 			refreshView()
 		}
@@ -682,150 +672,5 @@ class SumiWindow : Service() {
 			}
 		}
 		return str
-	}
-	
-	/**
-	 * The top function of calculating the answer
-	 * @param inputStr Game data
-	 * @return True: The current board can be cleared,
-	 * False: Can't be cleared
-	 */
-	private fun cal(inputStr : String) : Boolean {
-		for (i in 1..6) {
-			for (j in 1..11) {
-				m[i][j] = inputStr[(i-1)*11+j-1]
-				mm[i][j] = inputStr[(i-1)*11+j-1]
-			}
-		}
-		
-		for (i in 1..6) {
-			for (j in 1..11) {
-				for (d in 0 until 4) {
-					q.addLast(Pair(i, j))
-					ans.clear()
-					while (q.isNotEmpty()) {
-						val (x, y) = q.removeFirst()
-						if (m[x][y] == 'x' || m[x][y] == 'z') continue
-						for (k in 0 until 8) {
-							for (l in 0 until 13) {
-								n[k][l] = false
-							}
-						}
-						var k = d
-						var l = 0
-						while (l < 4) {
-							if (check(x, y, m[x][y], k%4, 0)) {
-								connect(x, y)
-								break
-							}
-							k += 1
-							l += 1
-						}
-					}
-					if (isEmpty()) return true
-					for (k in 1..6) {
-						for (l in 1..11) {
-							m[k][l] = mm[k][l]
-						}
-					}
-				}
-			}
-		}
-		return false
-	}
-	
-	/**
-	 * Check whether the given sumi can connect to another same sumi
-	 * @param x x-coordinate of start position
-	 * @param y y-coordinate of start position
-	 * @param value sumi value(a~p)
-	 * @param dir direction that currently check for
-	 * @param corner how many corner already used now
-	 * @return True: Found the sumi that can connect,
-	 * False: Can't find
-	 */
-	private fun check(x : Int, y : Int, value : Char, dir : Int, corner : Int) : Boolean {
-		var posx = x
-		var posy = y
-		n[posx][posy] = true
-		while (true) {
-			posx += dx[dir]
-			posy += dy[dir]
-			if (posx < 0 || posx >= 8) break
-			if (posy < 0 || posy >= 13) break
-			if (n[posx][posy]) break
-			if (posx in 1..6 && posy in 1..11) n[posx][posy] = true
-			if (m[posx][posy] == 'x') {
-				if (corner < 2) {
-					for (i in 0 until 4) {
-						if (i == dir) {
-							if (check(posx, posy, value, i, corner)) return true
-						}
-						else {
-							if (check(posx, posy, value, i, corner+1)) return true
-						}
-					}
-				}
-			}
-			else if (m[posx][posy] == value) {
-				rx = posx
-				ry = posy
-				return true
-			}
-			else break
-		}
-		return false
-	}
-	
-	/**
-	 * Connect two point and add the pending sumi
-	 * @param x x-coordinate of point
-	 * @param y y-coordinate of point
-	 */
-	private fun connect(x : Int, y : Int) {
-		m[x][y] = 'x'
-		m[rx][ry] = 'x'
-		ans.addLast(Pair(x, y))
-		ans.addLast(Pair(rx, ry))
-		for (i in 0 until 4) {
-			var posx = x
-			var posy = y
-			while (true) {
-				posx += dx[i]
-				posy += dy[i]
-				if (posx <= 0 || posx >= 7) break
-				if (posy <= 0 || posy >= 12) break
-				if (m[posx][posy] != 'x' && m[posx][posy] != 'z') {
-					q.addLast(Pair(posx, posy))
-				}
-			}
-		}
-		for (i in 0 until 4) {
-			var posx = rx
-			var posy = ry
-			while (true) {
-				posx += dx[i]
-				posy += dy[i]
-				if (posx <= 0 || posx >= 7) break
-				if (posy <= 0 || posy >= 12) break
-				if (m[posx][posy] != 'x' && m[posx][posy] != 'z') {
-					q.addLast(Pair(posx, posy))
-				}
-			}
-		}
-	}
-	
-	/**
-	 * Check the board is solved or not
-	 * @return True: Solved it,
-	 * False: There are sumi remained
-	 */
-	private fun isEmpty() : Boolean {
-		for (i in 1..6) {
-			for (j in 1..11) {
-				if (m[i][j] != 'x' && m[i][j] != 'z') return false
-			}
-		}
-		return true
 	}
 }

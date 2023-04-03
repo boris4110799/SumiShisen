@@ -42,7 +42,7 @@ class SumiWindow : Service() {
 	/**
 	 * The quantity of data
 	 */
-	private val dataSize = 21
+	private val dataSize = 32
 	
 	/**
 	 * Is the icon being click
@@ -424,14 +424,20 @@ class SumiWindow : Service() {
 					binding.textViewInfo.text = getString(R.string.text_success)
 					showAnswer(ansInd)
 					
-					dataSet.add(inputStr)
-					var outputStr = ""
-					for (i in dataSet) {
-						outputStr += i
-						outputStr += "\n"
+					var xCounter = 0
+					for (i in inputStr) {
+						if (i == 'x') xCounter += 1
 					}
-					applicationContext.openFileOutput("data.txt", Context.MODE_PRIVATE).use {
-						it.write(outputStr.toByteArray())
+					if (xCounter < 4) {
+						dataSet.add(formatingData(inputStr))
+						var outputStr = ""
+						for (i in dataSet) {
+							outputStr += i
+							outputStr += "\n"
+						}
+						applicationContext.openFileOutput("data.txt", Context.MODE_PRIVATE).use {
+							it.write(outputStr.toByteArray())
+						}
 					}
 				}
 				else boardStatus = 0
@@ -699,5 +705,26 @@ class SumiWindow : Service() {
 			}
 		}
 		return str
+	}
+	
+	private fun formatingData(inputStr : String) : String {
+		val dataMap = mutableMapOf<Char, Char>()
+		var outputStr = ""
+		var char = 'a'
+		for (i in inputStr.indices) {
+			if (inputStr[i] == 'x') outputStr += 'x'
+			else if (inputStr[i] == 'z') outputStr += 'z'
+			else {
+				if (dataMap.containsKey(inputStr[i])) {
+					outputStr += dataMap[inputStr[i]]
+				}
+				else {
+					dataMap[inputStr[i]] = char
+					outputStr += char
+					char += 1
+				}
+			}
+		}
+		return outputStr
 	}
 }

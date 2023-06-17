@@ -42,7 +42,7 @@ class SumiWindow : Service() {
 	/**
 	 * The quantity of data
 	 */
-	private val dataSize = 32
+	private val dataSize = 40
 	
 	/**
 	 * Is the icon being click
@@ -217,11 +217,13 @@ class SumiWindow : Service() {
 						px = event.rawX.toDouble()
 						py = event.rawY.toDouble()
 					}
+					
 					MotionEvent.ACTION_MOVE -> {
 						iconLayoutUpdateParams.x = (sx+event.rawX-px).toInt()
 						iconLayoutUpdateParams.y = (sy+event.rawY-py).toInt()
 						windowManager?.updateViewLayout(iconView, iconLayoutUpdateParams)
 					}
+					
 					MotionEvent.ACTION_UP   -> {
 						if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
 							if (iconLayoutUpdateParams.x in -75..75 && iconLayoutUpdateParams.y in screenHeight/2-300..screenHeight/2) {
@@ -270,6 +272,7 @@ class SumiWindow : Service() {
 						refreshView()
 						currentStr = outputText()
 					}
+					
 					binding.btnBox.id -> {
 						if ((view as Button).hint == "x") {
 							view.text = binding.btnBox.text
@@ -278,6 +281,7 @@ class SumiWindow : Service() {
 							currentStr = outputText()
 						}
 					}
+					
 					else              -> {
 						if ((view as Button).hint == "x") {
 							if (inputCounter[chooseID] == 4) {
@@ -478,6 +482,7 @@ class SumiWindow : Service() {
 						}
 					}
 				}
+				
 				MotionEvent.ACTION_UP   -> {
 					for (i in 1..6) {
 						for (j in 1..11) {
@@ -561,7 +566,7 @@ class SumiWindow : Service() {
 	private fun matchData(inputStr : String) : Int {
 		var matchCount = 0
 		for (i in dataSet) {
-			val tempMap = mutableMapOf<Char, Char>()
+			val dataMap = mutableMapOf<Char, Char>()
 			var isMatch = true
 			for (j in i.indices) {
 				if (!isMatch) break
@@ -570,15 +575,35 @@ class SumiWindow : Service() {
 					if (i[j] != 'z') isMatch = false
 				}
 				else {
-					if (tempMap.containsKey(i[j])) {
-						if (tempMap[i[j]] != inputStr[j]) isMatch = false
+					if (dataMap.containsKey(i[j])) {
+						if (dataMap[i[j]] != inputStr[j]) isMatch = false
 					}
 					else {
 						if (i[j] == 'x' || i[j] == 'z') isMatch = false
-						else tempMap[i[j]] = inputStr[j]
+						else dataMap[i[j]] = inputStr[j]
 					}
 				}
 			}
+			
+			val inputMap = mutableMapOf<Char, Char>()
+			for (j in i.indices) {
+				if (!isMatch) break
+				if (i[j] == 'x') {
+					if (inputStr[j] != 'x') isMatch = false
+				}
+				else if (i[j] == 'z') {
+					if (inputStr[j] != 'x' && inputStr[j] != 'z') isMatch = false
+				}
+				else {
+					if (inputMap.containsKey(inputStr[j])) {
+						if (inputMap[inputStr[j]] != i[j]) isMatch = false
+					}
+					else {
+						if (inputStr[j] != 'x' && inputStr[j] != 'z') inputMap[inputStr[j]] = i[j]
+					}
+				}
+			}
+			
 			if (isMatch) {
 				matchCount += 1
 				for (j in i.indices) {

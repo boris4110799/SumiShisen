@@ -12,6 +12,7 @@ object MinigamesSolver {
 	private var ry : Int = 0
 	private var q = LinkedList<Pair<Int, Int>>()
 	private var ans = LinkedList<Pair<Int, Int>>()
+	val xzList get() = listOf('x', 'z')
 	
 	/**
 	 * Return answer after calculate the problem
@@ -41,7 +42,7 @@ object MinigamesSolver {
 					ans.clear()
 					while (q.isNotEmpty()) {
 						val (x, y) = q.removeFirst()
-						if (m[x][y] == 'x' || m[x][y] == 'z') continue
+						if (m[x][y] in xzList) continue
 						for (k in 0 until 8) {
 							for (l in 0 until 13) {
 								n[k][l] = false
@@ -87,8 +88,7 @@ object MinigamesSolver {
 		while (true) {
 			posx += dx[dir]
 			posy += dy[dir]
-			if (posx < 0 || posx >= 8) break
-			if (posy < 0 || posy >= 13) break
+			if (posx !in 0..7 || posy !in 0..12) break
 			if (n[posx][posy]) break
 			if (posx in 1..6 && posy in 1..11) n[posx][posy] = true
 			if (m[posx][posy] == 'x') {
@@ -129,9 +129,8 @@ object MinigamesSolver {
 			while (true) {
 				posx += dx[i]
 				posy += dy[i]
-				if (posx <= 0 || posx >= 7) break
-				if (posy <= 0 || posy >= 12) break
-				if (m[posx][posy] != 'x' && m[posx][posy] != 'z') {
+				if (posx !in 1..6 || posy !in 1..11) break
+				if (m[posx][posy] !in xzList) {
 					q.addLast(Pair(posx, posy))
 				}
 			}
@@ -142,9 +141,8 @@ object MinigamesSolver {
 			while (true) {
 				posx += dx[i]
 				posy += dy[i]
-				if (posx <= 0 || posx >= 7) break
-				if (posy <= 0 || posy >= 12) break
-				if (m[posx][posy] != 'x' && m[posx][posy] != 'z') {
+				if (posx !in 1..6 || posy !in 1..11) break
+				if (m[posx][posy] !in xzList) {
 					q.addLast(Pair(posx, posy))
 				}
 			}
@@ -159,7 +157,7 @@ object MinigamesSolver {
 	private fun isEmpty() : Boolean {
 		for (i in 1..6) {
 			for (j in 1..11) {
-				if (m[i][j] != 'x' && m[i][j] != 'z') return false
+				if (m[i][j] !in xzList) return false
 			}
 		}
 		return true

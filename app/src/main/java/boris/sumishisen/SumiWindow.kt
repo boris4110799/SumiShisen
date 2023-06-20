@@ -14,7 +14,11 @@ import android.graphics.PixelFormat
 import android.os.IBinder
 import android.util.DisplayMetrics
 import android.util.TypedValue
-import android.view.*
+import android.view.Gravity
+import android.view.LayoutInflater
+import android.view.MotionEvent
+import android.view.View
+import android.view.WindowManager
 import android.widget.Button
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.app.NotificationCompat
@@ -47,7 +51,7 @@ class SumiWindow : Service() {
 	/**
 	 * Is the icon being click
 	 */
-	private var isClick = false
+	private var isSumiViewShow = false
 	
 	/**
 	 * Store the button id with map
@@ -108,7 +112,9 @@ class SumiWindow : Service() {
 		}
 		notificationManager.createNotificationChannel(channel)
 		val builder = NotificationCompat.Builder(this, "SumiShisen")
-			.addAction(R.drawable.sumikko_cat, "Close", PendingIntent.getService(applicationContext, 1, Intent(applicationContext, SumiWindow::class.java).setAction(actionCLOSE), PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT))
+			.addAction(R.drawable.sumikko_cat, "Close", PendingIntent.getService(applicationContext, 1,
+				Intent(applicationContext, SumiWindow::class.java).setAction(actionCLOSE),
+				PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT))
 			.setSmallIcon(R.drawable.sumikko_cat)
 			.setContentText("SumiShisen is running")
 			.setPriority(NotificationCompat.PRIORITY_DEFAULT)
@@ -143,23 +149,25 @@ class SumiWindow : Service() {
 			assetFd.close()
 			
 			for (i in dataList) {
-				var tempData : String
+				var comparedData = ""
 				for (j in dataSet) {
-					tempData = compareData(i, j)
-					if (tempData.isNotEmpty()) {
-						if (tempData == i) {
+					comparedData = compareData(i, j)
+					if (comparedData.isNotEmpty()) {
+						if (comparedData == i) {
 							dataSet.remove(j)
 							dataSet.add(i)
 						}
 						break
 					}
 				}
+				if (comparedData.isEmpty()) {
+					dataSet.add(i)
+				}
 			}
 			
 			var outputStr = ""
 			for (i in dataSet) {
-				outputStr += i
-				outputStr += "\n"
+				outputStr += "${i}\n"
 			}
 			applicationContext.openFileOutput("data.txt", Context.MODE_PRIVATE).use {
 				it.write(outputStr.toByteArray())
@@ -169,24 +177,26 @@ class SumiWindow : Service() {
 		//Set up the view
 		metrics = applicationContext.resources.displayMetrics
 		windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
-		iconView = (baseContext.getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(R.layout.sumi_icon, null)
-		sumiView = (baseContext.getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(R.layout.sumi_layout, null)
+		iconView = (baseContext.getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(R.layout.sumi_icon,
+			null)
+		sumiView = (baseContext.getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(
+			R.layout.sumi_layout, null)
 		_binding = SumiLayoutBinding.bind(sumiView!!)
 		
 		//Set the icon's size and position
-		iconLayoutParams = WindowManager.LayoutParams(WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, PixelFormat.TRANSPARENT)
+		iconLayoutParams = WindowManager.LayoutParams(WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
+			WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, PixelFormat.TRANSPARENT)
 		iconLayoutParams!!.apply {
 			gravity = Gravity.CENTER
 			x = screenWidth/2
 			y = 0
-			this.height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50F, metrics)
-				.roundToInt()
-			this.width = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50F, metrics)
-				.roundToInt()
+			this.height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 55F, metrics).roundToInt()
+			this.width = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 55F, metrics).roundToInt()
 		}
 		
 		//Set the board size and position
-		windowLayoutParams = WindowManager.LayoutParams(WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, PixelFormat.RGBA_F16)
+		windowLayoutParams = WindowManager.LayoutParams(WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
+			WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, PixelFormat.RGBA_F16)
 		windowLayoutParams!!.apply {
 			gravity = Gravity.CENTER
 			x = 0
@@ -239,12 +249,12 @@ class SumiWindow : Service() {
 							windowManager?.updateViewLayout(iconView, iconLayoutUpdateParams)
 						}
 						if (abs(event.rawX.toDouble()-px) < 10 && abs(event.rawY.toDouble()-py) < 10) {
-							if (isClick) {
-								isClick = false
+							if (isSumiViewShow) {
+								isSumiViewShow = false
 								windowManager?.removeView(sumiView)
 							}
 							else {
-								isClick = true
+								isSumiViewShow = true
 								windowManager?.addView(sumiView, windowLayoutParams)
 							}
 							windowManager?.updateViewLayout(iconView, iconLayoutUpdateParams)
@@ -257,7 +267,8 @@ class SumiWindow : Service() {
 		
 		//The listener when the A~P, Box, Del button is being clicked
 		val chooseListener = View.OnClickListener { view ->
-			if (chooseID != 0) binding.root.findViewById<Button>(chooseID).backgroundTintList = ColorStateList.valueOf(getColor(R.color.purple_200))
+			if (chooseID != 0) binding.root.findViewById<Button>(chooseID).backgroundTintList = ColorStateList.valueOf(
+				getColor(R.color.purple_200))
 			view.backgroundTintList = ColorStateList.valueOf(getColor(R.color.accent))
 			chooseID = view.id
 		}
@@ -401,8 +412,10 @@ class SumiWindow : Service() {
 		binding.btnDel.setOnLongClickListener {
 			for (i in 1..6) {
 				for (j in 1..11) {
-					binding.root.findViewById<Button>(idMap[100*i+j]!!).text = "-"
-					binding.root.findViewById<Button>(idMap[100*i+j]!!).hint = "x"
+					binding.root.findViewById<Button>(idMap[100*i+j]!!).apply {
+						text = "-"
+						hint = "x"
+					}
 				}
 			}
 			for (i in 0..15) {
@@ -417,7 +430,8 @@ class SumiWindow : Service() {
 		//Calculate the answer and show it
 		binding.btnOk.setOnClickListener {
 			viewOutput()
-			if (chooseID != 0) binding.root.findViewById<Button>(chooseID).backgroundTintList = ColorStateList.valueOf(getColor(R.color.purple_200))
+			if (chooseID != 0) binding.root.findViewById<Button>(chooseID).backgroundTintList = ColorStateList.valueOf(
+				getColor(R.color.purple_200))
 			chooseID = 0
 			binding.textViewInfo.text = getString(R.string.text_waiting)
 			
@@ -428,16 +442,11 @@ class SumiWindow : Service() {
 					binding.textViewInfo.text = getString(R.string.text_success)
 					showAnswer(ansInd)
 					
-					var xCounter = 0
-					for (i in inputStr) {
-						if (i == 'x') xCounter += 1
-					}
-					if (xCounter < 4) {
-						dataSet.add(formatingData(inputStr))
+					if (inputStr.filter { c -> c == 'x' }.length < 4) {
+						dataSet.add(formattingData(inputStr))
 						var outputStr = ""
 						for (i in dataSet) {
-							outputStr += i
-							outputStr += "\n"
+							outputStr += "${i}\n"
 						}
 						applicationContext.openFileOutput("data.txt", Context.MODE_PRIVATE).use {
 							it.write(outputStr.toByteArray())
@@ -526,7 +535,7 @@ class SumiWindow : Service() {
 		super.onDestroy()
 		stopSelf()
 		windowManager?.removeView(iconView)
-		if (isClick) windowManager?.removeView(sumiView)
+		if (isSumiViewShow) windowManager?.removeView(sumiView)
 	}
 	
 	/**
@@ -579,7 +588,7 @@ class SumiWindow : Service() {
 						if (dataMap[i[j]] != inputStr[j]) isMatch = false
 					}
 					else {
-						if (i[j] == 'x' || i[j] == 'z') isMatch = false
+						if (i[j] in MinigamesSolver.xzList) isMatch = false
 						else dataMap[i[j]] = inputStr[j]
 					}
 				}
@@ -592,14 +601,14 @@ class SumiWindow : Service() {
 					if (inputStr[j] != 'x') isMatch = false
 				}
 				else if (i[j] == 'z') {
-					if (inputStr[j] != 'x' && inputStr[j] != 'z') isMatch = false
+					if (inputStr[j] !in MinigamesSolver.xzList) isMatch = false
 				}
 				else {
 					if (inputMap.containsKey(inputStr[j])) {
 						if (inputMap[inputStr[j]] != i[j]) isMatch = false
 					}
 					else {
-						if (inputStr[j] != 'x' && inputStr[j] != 'z') inputMap[inputStr[j]] = i[j]
+						if (inputStr[j] !in MinigamesSolver.xzList) inputMap[inputStr[j]] = i[j]
 					}
 				}
 			}
@@ -635,12 +644,16 @@ class SumiWindow : Service() {
 	
 	private fun compareData(aStr : String, bStr : String) : String {
 		val compareMap = mutableMapOf<Char, Char>()
+		compareMap['x'] = 'x'
+		compareMap['z'] = 'z'
 		for (i in aStr.indices) {
 			if (compareMap.containsKey(aStr[i])) {
 				if (compareMap[aStr[i]] != bStr[i]) return ""
 			}
 			else {
-				compareMap[aStr[i]] = bStr[i]
+				if (bStr[i] != 'x') {
+					compareMap[aStr[i]] = bStr[i]
+				}
 			}
 		}
 		return if (aStr <= bStr) aStr else bStr
@@ -689,8 +702,10 @@ class SumiWindow : Service() {
 		if (ind in 0 until ans.size) {
 			val btnID1 = ans[ind*2].first*100+ans[ind*2].second
 			val btnID2 = ans[ind*2+1].first*100+ans[ind*2+1].second
-			if (idMap.contains(btnID1)) binding.root.findViewById<Button>(idMap[btnID1]!!).backgroundTintList = ColorStateList.valueOf(getColor(R.color.accent))
-			if (idMap.contains(btnID2)) binding.root.findViewById<Button>(idMap[btnID2]!!).backgroundTintList = ColorStateList.valueOf(getColor(R.color.accent))
+			if (idMap.contains(btnID1)) binding.root.findViewById<Button>(
+				idMap[btnID1]!!).backgroundTintList = ColorStateList.valueOf(getColor(R.color.accent))
+			if (idMap.contains(btnID2)) binding.root.findViewById<Button>(
+				idMap[btnID2]!!).backgroundTintList = ColorStateList.valueOf(getColor(R.color.accent))
 		}
 	}
 	
@@ -701,8 +716,10 @@ class SumiWindow : Service() {
 		if (ind in 0 until ans.size) {
 			val btnID1 = ans[ind*2].first*100+ans[ind*2].second
 			val btnID2 = ans[ind*2+1].first*100+ans[ind*2+1].second
-			if (idMap.contains(btnID1)) binding.root.findViewById<Button>(idMap[btnID1]!!).backgroundTintList = ColorStateList.valueOf(getColor(R.color.btn_input))
-			if (idMap.contains(btnID2)) binding.root.findViewById<Button>(idMap[btnID2]!!).backgroundTintList = ColorStateList.valueOf(getColor(R.color.btn_input))
+			if (idMap.contains(btnID1)) binding.root.findViewById<Button>(
+				idMap[btnID1]!!).backgroundTintList = ColorStateList.valueOf(getColor(R.color.btn_input))
+			if (idMap.contains(btnID2)) binding.root.findViewById<Button>(
+				idMap[btnID2]!!).backgroundTintList = ColorStateList.valueOf(getColor(R.color.btn_input))
 		}
 	}
 	
@@ -732,10 +749,11 @@ class SumiWindow : Service() {
 		return str
 	}
 	
-	private fun formatingData(inputStr : String) : String {
+	private fun formattingData(inputStr : String) : String {
 		val dataMap = mutableMapOf<Char, Char>()
 		var outputStr = ""
 		var char = 'a'
+		
 		for (i in inputStr.indices) {
 			if (inputStr[i] == 'x') outputStr += 'x'
 			else if (inputStr[i] == 'z') outputStr += 'z'

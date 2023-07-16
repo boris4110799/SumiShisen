@@ -46,7 +46,7 @@ class SumiWindow : Service() {
 	/**
 	 * The quantity of data
 	 */
-	private val dataSize = 40
+	private val dataSize = 59
 	
 	/**
 	 * Is the icon being click
@@ -189,21 +189,21 @@ class SumiWindow : Service() {
 		iconLayoutParams!!.apply {
 			gravity = Gravity.CENTER
 			x = screenWidth/2
-			y = 0
-			this.height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 55F, metrics).roundToInt()
-			this.width = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 55F, metrics).roundToInt()
+			y = -screenHeight/4
+			this.height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50F, metrics).roundToInt()
+			this.width = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50F, metrics).roundToInt()
 		}
 		
 		//Set the board size and position
 		windowLayoutParams = WindowManager.LayoutParams(WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
-			WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, PixelFormat.RGBA_F16)
+			WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, PixelFormat.RGBA_8888)
 		windowLayoutParams!!.apply {
 			gravity = Gravity.CENTER
 			x = 0
 			y = 0
 			screenOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
 			this.height = (screenWidth*0.85f).toInt()
-			this.width = (screenHeight*0.9f).toInt()
+			this.width = (screenHeight*0.85f).toInt()
 		}
 		
 		//Add view to window

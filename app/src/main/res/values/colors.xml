@@ -12,5 +12,5 @@
     <color name="accent">#FF4081</color>
     <color name="trans">#00000000</color>
     <color name="window_background">#FF333333</color>
-    <color name="btn_input">#FFAAAAAA</color>
+    <color name="btn_input">#FFBBBBBB</color>
 </resources>

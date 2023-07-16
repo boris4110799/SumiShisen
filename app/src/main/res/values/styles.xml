@@ -10,9 +10,12 @@
 
     <style name="Theme.SumiShisen.Button" parent="Widget.AppCompat.Button">
         <item name="android:background">@drawable/btn_design</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="Theme.SumiShisen.Input" parent="Widget.AppCompat.Button">
         <item name="android:background">@drawable/input_design</item>
+        <item name="android:layout_margin">2dp</item>
+        <item name="android:textStyle">bold</item>
     </style>
 </resources>

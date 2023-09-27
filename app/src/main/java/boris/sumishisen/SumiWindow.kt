@@ -1,32 +1,37 @@
 package boris.sumishisen
 
+import android.accessibilityservice.AccessibilityService
+import android.accessibilityservice.GestureDescription
 import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
-import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.res.ColorStateList
 import android.content.res.Configuration
+import android.graphics.Path
 import android.graphics.PixelFormat
-import android.os.IBinder
+import android.os.Build
 import android.util.DisplayMetrics
+import android.util.Log
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
+import android.view.accessibility.AccessibilityEvent
 import android.widget.Button
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.app.NotificationCompat
 import boris.sumishisen.databinding.SumiLayoutBinding
+import java.lang.Thread.sleep
 import kotlin.math.abs
 import kotlin.math.roundToInt
 
-class SumiWindow : Service() {
+class SumiWindow : AccessibilityService() {
 	//In below comment, 'data' means the string-style of problem
 	//Ex:abcadefefbgghijklkzjgmlzjhfzdaekcnzgobmldiocmhoeohidbijzlkcanxnfmn
 	
@@ -39,6 +44,8 @@ class SumiWindow : Service() {
 	private lateinit var metrics : DisplayMetrics
 	private val screenWidth get() = metrics.widthPixels
 	private val screenHeight get() = metrics.heightPixels
+	private var realWidth : Int = 0
+	private var realHeight : Int = 0
 	private var iconLayoutParams : WindowManager.LayoutParams? = null
 	private var windowLayoutParams : WindowManager.LayoutParams? = null
 	private val actionCLOSE = "ACTION_CLOSE"
@@ -86,10 +93,6 @@ class SumiWindow : Service() {
 	private val ans get() = MinigamesSolver.getAnswer()
 	private var ansInd = 0
 	private var boardStatus = -1
-	
-	override fun onBind(intent : Intent) : IBinder? {
-		return null
-	}
 	
 	override fun onConfigurationChanged(newConfig : Configuration) {
 		super.onConfigurationChanged(newConfig)
@@ -177,6 +180,19 @@ class SumiWindow : Service() {
 		//Set up the view
 		metrics = applicationContext.resources.displayMetrics
 		windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
+		
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+			realWidth = windowManager?.maximumWindowMetrics?.bounds?.width() ?: 0
+			realHeight = windowManager?.maximumWindowMetrics?.bounds?.height() ?: 0
+		}
+		else {
+			val displayMetrics = DisplayMetrics()
+			windowManager?.defaultDisplay?.getRealMetrics(displayMetrics)
+			realWidth = displayMetrics.widthPixels
+			realHeight = displayMetrics.heightPixels
+		}
+		if (realWidth < realHeight) realWidth = realHeight.also { realHeight = realWidth }
+		
 		iconView = (baseContext.getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(R.layout.sumi_icon,
 			null)
 		sumiView = (baseContext.getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(
@@ -202,8 +218,14 @@ class SumiWindow : Service() {
 			x = 0
 			y = 0
 			screenOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-			this.height = (screenWidth*0.85f).toInt()
-			this.width = (screenHeight*0.85f).toInt()
+			if (screenHeight > screenWidth) {
+				this.height = (screenWidth*0.85f).toInt()
+				this.width = (screenHeight*0.85f).toInt()
+			}
+			else {
+				this.height = (screenHeight*0.85f).toInt()
+				this.width = (screenWidth*0.85f).toInt()
+			}
 		}
 		
 		//Add view to window
@@ -237,6 +259,7 @@ class SumiWindow : Service() {
 					MotionEvent.ACTION_UP   -> {
 						if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
 							if (iconLayoutUpdateParams.x in -75..75 && iconLayoutUpdateParams.y in screenHeight/2-300..screenHeight/2) {
+								disableSelf()
 								stopSelf()
 							}
 						}
@@ -442,6 +465,16 @@ class SumiWindow : Service() {
 					binding.textViewInfo.text = getString(R.string.text_success)
 					showAnswer(ansInd)
 					
+					isSumiViewShow = false
+					windowManager?.removeView(sumiView)
+					Thread {
+						sleep(1000)
+						for (p in ans) {
+							click(p.first, p.second)
+							sleep(300)
+						}
+					}.start()
+					
 					if (inputStr.filter { c -> c == 'x' }.length < 4) {
 						dataSet.add(formattingData(inputStr))
 						var outputStr = ""
@@ -524,15 +557,27 @@ class SumiWindow : Service() {
 			val action = intent.action
 			if (action != null) {
 				when (action) {
-					actionCLOSE -> stopSelf()
+					actionCLOSE -> {
+						disableSelf()
+						stopSelf()
+					}
 				}
 			}
 		}
 		return super.onStartCommand(intent, flags, startId)
 	}
 	
+	override fun onAccessibilityEvent(event : AccessibilityEvent?) {
+		//onAccessibilityEvent
+	}
+	
+	override fun onInterrupt() {
+		//onInterrupt
+	}
+	
 	override fun onDestroy() {
 		super.onDestroy()
+		disableSelf()
 		stopSelf()
 		windowManager?.removeView(iconView)
 		if (isSumiViewShow) windowManager?.removeView(sumiView)
@@ -769,5 +814,29 @@ class SumiWindow : Service() {
 			}
 		}
 		return outputStr
+	}
+	
+	/**
+	 * Perform click gesture
+	 */
+	private fun click(x : Int, y : Int) {
+		val path = Path()
+		var px = realWidth*(300/2340f)
+		var py = realHeight*(145/1080f)
+		px += realWidth*(1452/2340f)/22*(2*y-1)
+		py += realHeight*(790/1080f)/12*(2*x-1)
+		path.moveTo(px, py)
+		val gestureDescription = GestureDescription.Builder()
+			.addStroke(GestureDescription.StrokeDescription(path, 0, 100L))
+			.build()
+		dispatchGesture(gestureDescription, object : GestureResultCallback() {
+			override fun onCompleted(gestureDescription : GestureDescription?) {
+				super.onCompleted(gestureDescription)
+			}
+			
+			override fun onCancelled(gestureDescription : GestureDescription?) {
+				super.onCancelled(gestureDescription)
+			}
+		}, null)
 	}
 }

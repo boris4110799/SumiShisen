@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <resources>
+    <string name="accessibility_service_description">Enabled this for auto click feature</string>
+
     <string name="app_name">SumiShisen</string>
 
     <string name="text_A">A</string>

@@ -14,6 +14,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import boris.sumishisen.databinding.ActivityMainBinding
+import java.lang.Thread.sleep
 
 class MainActivity : AppCompatActivity() {
 	private lateinit var binding : ActivityMainBinding
@@ -44,7 +45,7 @@ class MainActivity : AppCompatActivity() {
 		if (!Settings.canDrawOverlays(this)) {
 			Toast.makeText(this, "Please turn on 'Display over other apps'", Toast.LENGTH_LONG).show()
 			Thread {
-				Thread.sleep(2000)
+				sleep(2000)
 				requestOverlayLauncher.launch(
 					Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.fromParts("package", packageName, null)))
 			}.start()
@@ -74,7 +75,7 @@ class MainActivity : AppCompatActivity() {
 				}
 				else {
 					Thread {
-						Thread.sleep(1000)
+						sleep(2000)
 						startActivity(Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).putExtra(
 							"android.provider.extra.APP_PACKAGE", packageName))
 					}.start()
@@ -98,6 +99,9 @@ class MainActivity : AppCompatActivity() {
 		}
 	}
 	
+	/**
+	 * Check accessibility service is enabled or not
+	 */
 	private fun isAccessibilityServiceEnabled() : Boolean {
 		val serviceList = accessibilityManager.getEnabledAccessibilityServiceList(
 			AccessibilityServiceInfo.FEEDBACK_ALL_MASK)

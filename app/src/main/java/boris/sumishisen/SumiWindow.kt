@@ -1,6 +1,7 @@
 package boris.sumishisen
 
 import android.accessibilityservice.AccessibilityService
+import android.accessibilityservice.AccessibilityServiceInfo
 import android.accessibilityservice.GestureDescription
 import android.annotation.SuppressLint
 import android.app.NotificationChannel
@@ -23,6 +24,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
 import android.view.accessibility.AccessibilityEvent
+import android.view.accessibility.AccessibilityManager
 import android.widget.Button
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.app.NotificationCompat
@@ -37,6 +39,7 @@ class SumiWindow : AccessibilityService() {
 	
 	//This is some arguments for the view
 	private var windowManager : WindowManager? = null
+	private lateinit var accessibilityManager : AccessibilityManager
 	private var iconView : View? = null
 	private var sumiView : View? = null
 	private var _binding : SumiLayoutBinding? = null
@@ -180,6 +183,7 @@ class SumiWindow : AccessibilityService() {
 		//Set up the view
 		metrics = applicationContext.resources.displayMetrics
 		windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
+		accessibilityManager = getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
 		
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
 			realWidth = windowManager?.maximumWindowMetrics?.bounds?.width() ?: 0
@@ -465,15 +469,17 @@ class SumiWindow : AccessibilityService() {
 					binding.textViewInfo.text = getString(R.string.text_success)
 					showAnswer(ansInd)
 					
-					isSumiViewShow = false
-					windowManager?.removeView(sumiView)
-					Thread {
-						sleep(1000)
-						for (p in ans) {
-							click(p.first, p.second)
-							sleep(300)
-						}
-					}.start()
+					if (isAccessibilityServiceEnabled()) {
+						isSumiViewShow = false
+						windowManager?.removeView(sumiView)
+						Thread {
+							sleep(1000)
+							for (p in ans) {
+								click(p.first, p.second)
+								sleep(300)
+							}
+						}.start()
+					}
 					
 					if (inputStr.filter { c -> c == 'x' }.length < 4) {
 						dataSet.add(formattingData(inputStr))
@@ -814,6 +820,18 @@ class SumiWindow : AccessibilityService() {
 			}
 		}
 		return outputStr
+	}
+	
+	/**
+	 * Check accessibility service is enabled or not
+	 */
+	private fun isAccessibilityServiceEnabled() : Boolean {
+		val serviceList = accessibilityManager.getEnabledAccessibilityServiceList(
+			AccessibilityServiceInfo.FEEDBACK_ALL_MASK)
+		for (serviceInfo in serviceList) {
+			if (serviceInfo.packageNames != null && serviceInfo.packageNames[0] == packageName) return true
+		}
+		return false
 	}
 	
 	/**

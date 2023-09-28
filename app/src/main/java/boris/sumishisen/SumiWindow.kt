@@ -56,7 +56,7 @@ class SumiWindow : AccessibilityService() {
 	/**
 	 * The quantity of data
 	 */
-	private val dataSize = 59
+	private val dataSize = 76
 	
 	/**
 	 * Is the icon being click

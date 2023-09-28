@@ -93,8 +93,19 @@ class SumiWindow : AccessibilityService() {
 	 */
 	private var matchStr = Array(66) { " " }
 	
-	private val ans get() = MinigamesSolver.getAnswer()
-	private var ansInd = 0
+	/**
+	 * The queue of answer
+	 */
+	private val answerQueue get() = MinigamesSolver.getAnswer()
+	
+	/**
+	 * The index of answerQueue
+	 */
+	private var answerQueueInd = 0
+	
+	/**
+	 * The status of board
+	 */
 	private var boardStatus = -1
 	
 	override fun onConfigurationChanged(newConfig : Configuration) {
@@ -262,9 +273,9 @@ class SumiWindow : AccessibilityService() {
 			val inputStr = outputHint()
 			boardStatus = if (MinigamesSolver.cal(inputStr)) 1 else 0
 			if (boardStatus == 1) {
-				if (ans.size > 0) {
+				if (answerQueue.size > 0) {
 					binding.textViewInfo.text = getString(R.string.text_success)
-					showAnswer(ansInd)
+					showAnswer(answerQueueInd)
 					
 					//Save when the inputStr is completed
 					if (inputStr.filter { c -> c == 'x' }.length < 4) {
@@ -282,13 +293,14 @@ class SumiWindow : AccessibilityService() {
 			}
 			if (boardStatus == 0) binding.textViewInfo.text = getString(R.string.text_fail)
 		}
+		//Run auto click
 		binding.btnAuto.setOnClickListener {
 			if (isAccessibilityServiceEnabled()) {
 				isSumiViewShow = false
 				windowManager.removeView(sumiView)
 				Thread {
 					sleep(1000)
-					for (p in ans) {
+					for (p in answerQueue) {
 						click(p.first, p.second)
 						sleep(300)
 					}
@@ -296,6 +308,7 @@ class SumiWindow : AccessibilityService() {
 			}
 			else binding.textViewInfo.text = getString(R.string.text_unable)
 		}
+		//Jump to accessibility setting
 		binding.btnAuto.setOnLongClickListener {
 			startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
 			return@setOnLongClickListener true
@@ -303,25 +316,25 @@ class SumiWindow : AccessibilityService() {
 		//Show previous answer
 		binding.btnPre.setOnClickListener {
 			if (boardStatus == 1) {
-				hideAnswer(ansInd)
-				if (ansInd > 0) ansInd -= 1
-				showAnswer(ansInd)
+				hideAnswer(answerQueueInd)
+				if (answerQueueInd > 0) answerQueueInd -= 1
+				showAnswer(answerQueueInd)
 			}
 		}
 		//Show next answer
 		binding.btnNext.setOnClickListener {
 			if (boardStatus == 1) {
-				hideAnswer(ansInd)
-				if (ansInd < ans.size/2-1) ansInd += 1
-				showAnswer(ansInd)
+				hideAnswer(answerQueueInd)
+				if (answerQueueInd < answerQueue.size/2-1) answerQueueInd += 1
+				showAnswer(answerQueueInd)
 			}
 		}
 		//Close the answer mode
 		binding.btnClose.setOnClickListener {
 			viewInput()
-			if (boardStatus == 1) hideAnswer(ansInd)
+			if (boardStatus == 1) hideAnswer(answerQueueInd)
 			boardStatus = -1
-			ansInd = 0
+			answerQueueInd = 0
 			refreshView()
 		}
 		//Preview the match data
@@ -788,9 +801,9 @@ class SumiWindow : AccessibilityService() {
 	 * Show the answer
 	 */
 	private fun showAnswer(ind : Int) {
-		if (ind in 0 until ans.size) {
-			val btnID1 = ans[ind*2].first*100+ans[ind*2].second
-			val btnID2 = ans[ind*2+1].first*100+ans[ind*2+1].second
+		if (ind in 0 until answerQueue.size) {
+			val btnID1 = answerQueue[ind*2].first*100+answerQueue[ind*2].second
+			val btnID2 = answerQueue[ind*2+1].first*100+answerQueue[ind*2+1].second
 			if (idMap.contains(btnID1)) binding.root.findViewById<Button>(
 				idMap[btnID1]!!).backgroundTintList = ColorStateList.valueOf(getColor(R.color.accent))
 			if (idMap.contains(btnID2)) binding.root.findViewById<Button>(
@@ -802,9 +815,9 @@ class SumiWindow : AccessibilityService() {
 	 * Hide the answer
 	 */
 	private fun hideAnswer(ind : Int) {
-		if (ind in 0 until ans.size) {
-			val btnID1 = ans[ind*2].first*100+ans[ind*2].second
-			val btnID2 = ans[ind*2+1].first*100+ans[ind*2+1].second
+		if (ind in 0 until answerQueue.size) {
+			val btnID1 = answerQueue[ind*2].first*100+answerQueue[ind*2].second
+			val btnID2 = answerQueue[ind*2+1].first*100+answerQueue[ind*2+1].second
 			if (idMap.contains(btnID1)) binding.root.findViewById<Button>(
 				idMap[btnID1]!!).backgroundTintList = ColorStateList.valueOf(getColor(R.color.btn_input))
 			if (idMap.contains(btnID2)) binding.root.findViewById<Button>(

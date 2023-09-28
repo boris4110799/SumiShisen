@@ -18,11 +18,21 @@ A simple solver for Minigames in **Sumikko Farm**
 * Tap the `Apply` to auto fill-in the data
 * After tap the `OK`, if your input is solvable and complete, then it will be saved to your local data set
 
+## Auto Click Feature
+* In the result view, tap the `Auto` for auto click
+* To jump to accessibility setting, long tap the `Auto`
+* For some version of device, you may need to allow "Restricted setting" in app info, in order to enable "Accessibility" permission
+
 ## How to Close the App
 * While your cellphone is in the portrait orientation, drag the sumi icon to the middle-bottom of screen
-* If you enable "Notification" permission, then you can easily close it by tapping the `Close` in the sumi notification
+* If you enable "Notification" permission, then you can easily close it by tapping the `Close` in the notification
 
 ## Requirment 
 * Android 8 or later
 * "Display over other apps" permission
 * "Notification" permission
+* "Accessibility" permission (Optional)
+
+## Note
+Accessibility in this app just for performing click gesture, none of the information in your device will be collected.
+Furthermore, this app does not require any network connection, so it will not send any data to anyone.

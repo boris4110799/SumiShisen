@@ -31,9 +31,9 @@ object MinigamesSolver {
 		for (i in 1..6) {
 			for (j in 1..11) {
 				inputMatrix[i][j] = inputStr[(i-1)*11+j-1]
-				computeMatrix[i][j] = inputStr[(i-1)*11+j-1]
 			}
 		}
+		computeMatrix = inputMatrix.map { it.clone() }.toTypedArray()
 		
 		for (i in 1..6) {
 			for (j in 1..11) {
@@ -60,7 +60,7 @@ object MinigamesSolver {
 						}
 					}
 					if (isEmpty()) return true
-					computeMatrix = inputMatrix.clone()
+					computeMatrix = inputMatrix.map { it.clone() }.toTypedArray()
 				}
 			}
 		}

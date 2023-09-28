@@ -13,8 +13,11 @@ import android.view.accessibility.AccessibilityManager
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import boris.sumishisen.databinding.ActivityMainBinding
-import java.lang.Thread.sleep
+import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 	private lateinit var binding : ActivityMainBinding
@@ -43,12 +46,12 @@ class MainActivity : AppCompatActivity() {
 		accessibilityManager = getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
 		
 		if (!Settings.canDrawOverlays(this)) {
-			Toast.makeText(this, "Please turn on 'Display over other apps'", Toast.LENGTH_LONG).show()
-			Thread {
-				sleep(2000)
+			lifecycleScope.launch {
+				Snackbar.make(binding.root, "Please enable 'Display over other apps'", Snackbar.LENGTH_LONG).show()
+				delay(2000)
 				requestOverlayLauncher.launch(
 					Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.fromParts("package", packageName, null)))
-			}.start()
+			}
 		}
 		else {
 			isOverlayFinish = true
@@ -63,22 +66,25 @@ class MainActivity : AppCompatActivity() {
 					Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.fromParts("package", packageName, null)))
 			}
 			else if (!notificationManager.areNotificationsEnabled()) {
-				Toast.makeText(this, "Please turn on 'Notification'", Toast.LENGTH_LONG).show()
+				Snackbar.make(binding.root, "Please enable 'Notification'", Snackbar.LENGTH_LONG).show()
 				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
 					if (isNotificationFinish) {
-						startActivity(Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).putExtra(
-							"android.provider.extra.APP_PACKAGE", packageName))
+						lifecycleScope.launch {
+							delay(1000)
+							startActivity(Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).putExtra(
+								"android.provider.extra.APP_PACKAGE", packageName))
+						}
 					}
 					else {
 						requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
 					}
 				}
 				else {
-					Thread {
-						sleep(2000)
+					lifecycleScope.launch {
+						delay(2000)
 						startActivity(Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).putExtra(
 							"android.provider.extra.APP_PACKAGE", packageName))
-					}.start()
+					}
 				}
 			}
 			else if (!isAccessibilityServiceEnabled()) {

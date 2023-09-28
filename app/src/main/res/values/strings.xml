@@ -22,6 +22,7 @@
     <string name="text_P">P</string>
     <string name="text_a">a</string>
     <string name="text_apply">Apply</string>
+    <string name="text_auto">Auto</string>
     <string name="text_b">b</string>
     <string name="text_blank">-</string>
     <string name="text_box">Box</string>
@@ -47,6 +48,7 @@
     <string name="text_p">p</string>
     <string name="text_pre">Pre</string>
     <string name="text_success">Success</string>
+    <string name="text_unable">Enable accessibility service for auto click</string>
     <string name="text_view">View</string>
     <string name="text_waiting">Waiting…</string>
     <string name="text_x">x</string>

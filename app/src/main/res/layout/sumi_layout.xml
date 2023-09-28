@@ -1283,6 +1283,19 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <Button
+                android:id="@+id/btnAuto"
+                style="@style/Theme.SumiShisen.Button"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:text="@string/text_auto"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btnPre"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
                 android:id="@+id/btnPre"
                 style="@style/Theme.SumiShisen.Button"
                 android:layout_width="100dp"
@@ -1292,7 +1305,7 @@
                 android:textSize="20sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/btnNext"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toEndOf="@id/btnAuto"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <Button

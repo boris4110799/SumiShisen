@@ -92,7 +92,7 @@ class MainActivity : AppCompatActivity() {
 					Toast.makeText(this, "Enable accessibility service for auto click feature", Toast.LENGTH_LONG)
 						.show()
 					startForegroundService(Intent(this@MainActivity, SumiWindow::class.java))
-					finish()
+					finishAndRemoveTask()
 				}
 				else {
 					requestAccessibilityLauncher.launch(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
@@ -100,7 +100,7 @@ class MainActivity : AppCompatActivity() {
 			}
 			else {
 				startForegroundService(Intent(this@MainActivity, SumiWindow::class.java))
-				finish()
+				finishAndRemoveTask()
 			}
 		}
 	}

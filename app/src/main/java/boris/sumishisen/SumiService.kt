@@ -13,7 +13,7 @@ import java.lang.Thread.sleep
 
 class SumiService : AccessibilityService() {
 	companion object {
-		const val ACTION_CLICK = "boris.sumishisen.click"
+		const val ACTION_CLICK = "boris.sumishisen.minigames"
 	}
 
 	private lateinit var windowManager: WindowManager
@@ -21,6 +21,9 @@ class SumiService : AccessibilityService() {
 	private var realHeight: Int = 0
 	private lateinit var receiver: BroadcastReceiver
 
+	/**
+	 * The queue for minigames
+	 */
 	private val clickQueue = mutableListOf<Pair<Int, Int>>()
 	private var isThreadStart = false
 
@@ -38,7 +41,7 @@ class SumiService : AccessibilityService() {
 					clickQueue.add(Pair(x, y))
 					if (!isThreadStart) {
 						isThreadStart = true
-						startClick()
+						startClickMinigames()
 					}
 				}
 			}
@@ -81,21 +84,24 @@ class SumiService : AccessibilityService() {
 		if (realWidth < realHeight) realWidth = realHeight.also { realHeight = realWidth }
 	}
 
-	private fun startClick() {
+	/**
+	 * Click minigames with queue
+	 */
+	private fun startClickMinigames() {
 		Thread {
 			while (clickQueue.isNotEmpty()) {
 				sleep(300)
 				val (x, y) = clickQueue.removeFirst()
-				click(x, y)
+				clickMinigames(x, y)
 			}
 			isThreadStart = false
 		}.start()
 	}
 
 	/**
-	 * Perform click gesture
+	 * Perform click gesture at minigames
 	 */
-	private fun click(x: Int, y: Int) {
+	private fun clickMinigames(x: Int, y: Int) {
 		val path = Path()
 		var px = realWidth*(300/2340f)
 		var py = realHeight*(145/1080f)

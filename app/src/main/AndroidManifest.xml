@@ -20,7 +20,7 @@
             android:name=".SumiWindow"
             android:configChanges="screenSize|screenLayout|orientation|layoutDirection"
             android:enabled="true"
-            android:exported="true"
+            android:exported="false"
             android:foregroundServiceType="dataSync" />
         <service
             android:name=".SumiService"
@@ -45,7 +45,5 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
     </application>
-
 </manifest>

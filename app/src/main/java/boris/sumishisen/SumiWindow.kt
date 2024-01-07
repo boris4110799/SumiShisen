@@ -1,6 +1,6 @@
 package boris.sumishisen
 
-import android.accessibilityservice.*
+import android.accessibilityservice.AccessibilityServiceInfo
 import android.annotation.SuppressLint
 import android.app.*
 import android.content.Context
@@ -9,14 +9,13 @@ import android.content.pm.ActivityInfo
 import android.content.pm.ServiceInfo
 import android.content.res.ColorStateList
 import android.content.res.Configuration
-import android.graphics.Path
 import android.graphics.PixelFormat
 import android.os.Build
+import android.os.IBinder
 import android.provider.Settings
 import android.util.DisplayMetrics
 import android.util.TypedValue
 import android.view.*
-import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityManager
 import android.widget.Button
 import androidx.appcompat.content.res.AppCompatResources
@@ -26,7 +25,7 @@ import java.lang.Thread.sleep
 import kotlin.math.abs
 import kotlin.math.roundToInt
 
-class SumiWindow : AccessibilityService() {
+class SumiWindow : Service() {
 	//In below comment, 'data' means the string-style of problem
 	//Ex:abcadefefbgghijklkzjgmlzjhfzdaekcnzgobmldiocmhoeohidbijzlkcanxnfmn
 
@@ -40,8 +39,6 @@ class SumiWindow : AccessibilityService() {
 	private lateinit var metrics: DisplayMetrics
 	private val screenWidth get() = metrics.widthPixels
 	private val screenHeight get() = metrics.heightPixels
-	private var realWidth: Int = 0
-	private var realHeight: Int = 0
 	private lateinit var iconLayoutParams: WindowManager.LayoutParams
 	private lateinit var windowLayoutParams: WindowManager.LayoutParams
 	private val actionCLOSE = "ACTION_CLOSE"
@@ -172,7 +169,6 @@ class SumiWindow : AccessibilityService() {
 			}
 		}
 
-		setScreenSize()
 		setView()
 		setIdMap()
 
@@ -291,8 +287,11 @@ class SumiWindow : AccessibilityService() {
 				Thread {
 					sleep(1000)
 					for (p in answerQueue) {
-						click(p.first, p.second)
-						sleep(300)
+						sendBroadcast(Intent().setAction(SumiService.ACTION_CLICK)
+							.setPackage(packageName)
+							.putExtra("x", p.first)
+							.putExtra("y", p.second))
+						sleep(100)
 					}
 				}.start()
 			}
@@ -371,7 +370,7 @@ class SumiWindow : AccessibilityService() {
 			if (action != null) {
 				when (action) {
 					actionCLOSE -> {
-						disableSelf()
+						//disableSelf()
 						stopSelf()
 					}
 				}
@@ -380,17 +379,13 @@ class SumiWindow : AccessibilityService() {
 		return super.onStartCommand(intent, flags, startId)
 	}
 
-	override fun onAccessibilityEvent(event: AccessibilityEvent?) {
-		//Nothing need to retrieve
-	}
-
-	override fun onInterrupt() {
-		//onInterrupt
+	override fun onBind(intent: Intent): IBinder? {
+		return null
 	}
 
 	override fun onDestroy() {
 		super.onDestroy()
-		disableSelf()
+		//disableSelf()
 		stopSelf()
 		windowManager.removeView(iconView)
 		if (isSumiViewShow) windowManager.removeView(sumiView)
@@ -416,23 +411,6 @@ class SumiWindow : AccessibilityService() {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) startForeground(1, builder.build(),
 			ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC)
 		else startForeground(1, builder.build())
-	}
-
-	/**
-	 * Retrieve the actual screen size for auto click feature
-	 */
-	private fun setScreenSize() {
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-			realWidth = windowManager.maximumWindowMetrics.bounds.width()
-			realHeight = windowManager.maximumWindowMetrics.bounds.height()
-		}
-		else {
-			val displayMetrics = DisplayMetrics()
-			windowManager.defaultDisplay?.getRealMetrics(displayMetrics)
-			realWidth = displayMetrics.widthPixels
-			realHeight = displayMetrics.heightPixels
-		}
-		if (realWidth < realHeight) realWidth = realHeight.also { realHeight = realWidth }
 	}
 
 	@SuppressLint("InflateParams", "ClickableViewAccessibility")
@@ -500,8 +478,8 @@ class SumiWindow : AccessibilityService() {
 
 					MotionEvent.ACTION_UP   -> {
 						if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-							if (iconLayoutUpdateParams.x in -75..75 && iconLayoutUpdateParams.y in screenHeight/2-300..screenHeight/2) {
-								disableSelf()
+							if (iconLayoutUpdateParams.x in -100..100 && iconLayoutUpdateParams.y in screenHeight/2-300..screenHeight/2) {
+								//disableSelf()
 								stopSelf()
 							}
 						}
@@ -878,29 +856,5 @@ class SumiWindow : AccessibilityService() {
 			if (serviceInfo.packageNames != null && serviceInfo.packageNames[0] == packageName) return true
 		}
 		return false
-	}
-
-	/**
-	 * Perform click gesture
-	 */
-	private fun click(x: Int, y: Int) {
-		val path = Path()
-		var px = realWidth*(300/2340f)
-		var py = realHeight*(145/1080f)
-		px += realWidth*(1452/2340f)/22*(2*y-1)
-		py += realHeight*(790/1080f)/12*(2*x-1)
-		path.moveTo(px, py)
-		val gestureDescription = GestureDescription.Builder()
-			.addStroke(GestureDescription.StrokeDescription(path, 0, 100L))
-			.build()
-		dispatchGesture(gestureDescription, object : GestureResultCallback() {
-			override fun onCompleted(gestureDescription: GestureDescription?) {
-				super.onCompleted(gestureDescription)
-			}
-
-			override fun onCancelled(gestureDescription: GestureDescription?) {
-				super.onCancelled(gestureDescription)
-			}
-		}, null)
 	}
 }

@@ -20,9 +20,9 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
-	private lateinit var binding : ActivityMainBinding
-	private lateinit var notificationManager : NotificationManager
-	private lateinit var accessibilityManager : AccessibilityManager
+	private lateinit var binding: ActivityMainBinding
+	private lateinit var notificationManager: NotificationManager
+	private lateinit var accessibilityManager: AccessibilityManager
 	private var isOverlayFinish = false
 	private var isNotificationFinish = false
 	private var isAccessibilityFinish = false
@@ -36,15 +36,15 @@ class MainActivity : AppCompatActivity() {
 		ActivityResultContracts.StartActivityForResult()) {
 		isAccessibilityFinish = true
 	}
-	
-	override fun onCreate(savedInstanceState : Bundle?) {
+
+	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		binding = ActivityMainBinding.inflate(layoutInflater)
 		setContentView(binding.root)
-		
+
 		notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 		accessibilityManager = getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
-		
+
 		if (!Settings.canDrawOverlays(this)) {
 			lifecycleScope.launch {
 				Snackbar.make(binding.root, "Please enable 'Display over other apps'", Snackbar.LENGTH_LONG).show()
@@ -57,7 +57,7 @@ class MainActivity : AppCompatActivity() {
 			isOverlayFinish = true
 		}
 	}
-	
+
 	override fun onResume() {
 		super.onResume()
 		if (isOverlayFinish) {
@@ -92,6 +92,7 @@ class MainActivity : AppCompatActivity() {
 					Toast.makeText(this, "Enable accessibility service for auto click feature", Toast.LENGTH_LONG)
 						.show()
 					startForegroundService(Intent(this@MainActivity, SumiWindow::class.java))
+					startService(Intent(this, SumiService::class.java))
 					finishAndRemoveTask()
 				}
 				else {
@@ -104,11 +105,11 @@ class MainActivity : AppCompatActivity() {
 			}
 		}
 	}
-	
+
 	/**
 	 * Check accessibility service is enabled or not
 	 */
-	private fun isAccessibilityServiceEnabled() : Boolean {
+	private fun isAccessibilityServiceEnabled(): Boolean {
 		val serviceList = accessibilityManager.getEnabledAccessibilityServiceList(
 			AccessibilityServiceInfo.FEEDBACK_ALL_MASK)
 		for (serviceInfo in serviceList) {

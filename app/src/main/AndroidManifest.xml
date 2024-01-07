@@ -21,9 +21,12 @@
             android:configChanges="screenSize|screenLayout|orientation|layoutDirection"
             android:enabled="true"
             android:exported="true"
-            android:foregroundServiceType="dataSync"
-            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
-            android:process="boris.sumishisen">
+            android:foregroundServiceType="dataSync" />
+        <service
+            android:name=".SumiService"
+            android:enabled="true"
+            android:exported="true"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
             <intent-filter>
                 <action android:name="android.accessibilityservice.AccessibilityService" />
             </intent-filter>
@@ -38,9 +41,11 @@
             android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
     </application>
 
 </manifest>

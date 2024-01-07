@@ -1,6 +1,6 @@
 package boris.sumishisen
 
-import java.util.*
+import java.util.LinkedList
 
 object MinigamesSolver {
 	private val dx = intArrayOf(0, -1, 0, 1)
@@ -10,31 +10,31 @@ object MinigamesSolver {
 	private val finishedMatrix = Array(8) { Array(13) { false } }
 	private var processQueue = LinkedList<Pair<Int, Int>>()
 	private var answerQueue = LinkedList<Pair<Int, Int>>()
-	private var rx : Int = 0
-	private var ry : Int = 0
+	private var rx: Int = 0
+	private var ry: Int = 0
 	val xzList get() = listOf('x', 'z')
-	
+
 	/**
 	 * Return answer after calculate the problem
 	 */
-	fun getAnswer() : LinkedList<Pair<Int, Int>> {
+	fun getAnswer(): LinkedList<Pair<Int, Int>> {
 		return answerQueue
 	}
-	
+
 	/**
 	 * The top function of calculating the answer
 	 * @param inputStr Game data
 	 * @return True: The current board can be cleared,
 	 * False: Can't be cleared
 	 */
-	fun cal(inputStr : String) : Boolean {
+	fun cal(inputStr: String): Boolean {
 		for (i in 1..6) {
 			for (j in 1..11) {
 				inputMatrix[i][j] = inputStr[(i-1)*11+j-1]
 			}
 		}
 		computeMatrix = inputMatrix.map { it.clone() }.toTypedArray()
-		
+
 		for (i in 1..6) {
 			for (j in 1..11) {
 				for (d in 0 until 4) {
@@ -66,7 +66,7 @@ object MinigamesSolver {
 		}
 		return false
 	}
-	
+
 	/**
 	 * Check whether the given sumi can connect to another same sumi
 	 * @param x x-coordinate of start position
@@ -77,7 +77,7 @@ object MinigamesSolver {
 	 * @return True: Found the sumi that can connect,
 	 * False: Can't find
 	 */
-	private fun check(x : Int, y : Int, value : Char, dir : Int, corner : Int) : Boolean {
+	private fun check(x: Int, y: Int, value: Char, dir: Int, corner: Int): Boolean {
 		var posX = x
 		var posY = y
 		finishedMatrix[posX][posY] = true
@@ -108,13 +108,13 @@ object MinigamesSolver {
 		}
 		return false
 	}
-	
+
 	/**
 	 * Connect two point and add the pending sumi
 	 * @param x x-coordinate of point
 	 * @param y y-coordinate of point
 	 */
-	private fun connect(x : Int, y : Int) {
+	private fun connect(x: Int, y: Int) {
 		computeMatrix[x][y] = 'x'
 		computeMatrix[rx][ry] = 'x'
 		answerQueue.addLast(Pair(x, y))
@@ -144,13 +144,13 @@ object MinigamesSolver {
 			}
 		}
 	}
-	
+
 	/**
 	 * Check the board is solved or not
 	 * @return True: Solved it,
 	 * False: There are sumi remained
 	 */
-	private fun isEmpty() : Boolean {
+	private fun isEmpty(): Boolean {
 		for (i in 1..6) {
 			for (j in 1..11) {
 				if (computeMatrix[i][j] !in xzList) return false

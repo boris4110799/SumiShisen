@@ -33,6 +33,9 @@ android {
 	buildFeatures {
 		viewBinding = true
 	}
+	androidResources {
+		noCompress += "txt"
+	}
 }
 
 dependencies {

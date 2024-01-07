@@ -21,7 +21,6 @@ import android.view.accessibility.AccessibilityManager
 import android.widget.Button
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.app.NotificationCompat
-import androidx.core.view.accessibility.AccessibilityEventCompat.setAction
 import boris.sumishisen.databinding.SumiLayoutBinding
 import java.lang.Thread.sleep
 import kotlin.math.abs
@@ -30,7 +29,7 @@ import kotlin.math.roundToInt
 class SumiWindow : AccessibilityService() {
 	//In below comment, 'data' means the string-style of problem
 	//Ex:abcadefefbgghijklkzjgmlzjhfzdaekcnzgobmldiocmhoeohidbijzlkcanxnfmn
-	
+
 	//This is some arguments for the view
 	private lateinit var windowManager: WindowManager
 	private lateinit var accessibilityManager: AccessibilityManager
@@ -46,62 +45,62 @@ class SumiWindow : AccessibilityService() {
 	private lateinit var iconLayoutParams: WindowManager.LayoutParams
 	private lateinit var windowLayoutParams: WindowManager.LayoutParams
 	private val actionCLOSE = "ACTION_CLOSE"
-	
+
 	/**
 	 * The quantity of data
 	 */
 	private val dataSize = 76
-	
+
 	/**
 	 * Is the icon being click
 	 */
 	private var isSumiViewShow = false
-	
+
 	/**
 	 * Store the button id with map
 	 */
 	private val idMap = mutableMapOf<Int, Int>()
-	
+
 	/**
 	 * The set of data that record the Minigame's problem
 	 */
 	private val dataSet = mutableSetOf<String>()
-	
+
 	/**
 	 * The button id (A~P, Box, Del) that you choose
 	 */
 	private var chooseID = 0
-	
+
 	/**
 	 * The counter of A~P that you mark above
 	 */
 	private val inputCounter = mutableMapOf<Int, Int>()
-	
+
 	/**
 	 * Current data of the board
 	 */
 	private var currentStr = Array(66) { " " }
-	
+
 	/**
 	 * Matched data of the board
 	 */
 	private var matchStr = Array(66) { " " }
-	
+
 	/**
 	 * The queue of answer
 	 */
 	private val answerQueue get() = MinigamesSolver.getAnswer()
-	
+
 	/**
 	 * The index of answerQueue
 	 */
 	private var answerQueueInd = 0
-	
+
 	/**
 	 * The status of board
 	 */
 	private var boardStatus = -1
-	
+
 	override fun onConfigurationChanged(newConfig: Configuration) {
 		super.onConfigurationChanged(newConfig)
 		metrics = applicationContext.resources.displayMetrics
@@ -111,18 +110,18 @@ class SumiWindow : AccessibilityService() {
 		}
 		windowManager.updateViewLayout(iconView, iconLayoutParams)
 	}
-	
+
 	@SuppressLint("InflateParams", "ClickableViewAccessibility")
 	override fun onCreate() {
 		super.onCreate()
-		
+
 		//Set up the variable
 		metrics = applicationContext.resources.displayMetrics
 		windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
 		accessibilityManager = getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
-		
+
 		setNotification()
-		
+
 		//If file exist then load data, otherwise create the file
 		if (!applicationContext.getFileStreamPath("data.txt").exists()) {
 			applicationContext.openFileOutput("data.txt", Context.MODE_PRIVATE).use {
@@ -130,11 +129,12 @@ class SumiWindow : AccessibilityService() {
 			}
 		}
 		else {
+			applicationContext.getFileStreamPath("data.txt").createNewFile()
 			applicationContext.openFileInput("data.txt").bufferedReader().useLines {
 				dataSet.addAll(it)
 			}
 		}
-		
+
 		//If Count not equal to dataSize, which means the new data are in the asset, then add it
 		val sharedPreferences = getSharedPreferences("Data", Context.MODE_PRIVATE)
 		val num = sharedPreferences.getInt("Count", 0)
@@ -142,14 +142,14 @@ class SumiWindow : AccessibilityService() {
 			val editor = sharedPreferences.edit()
 			editor.putInt("Count", dataSize)
 			editor.apply()
-			
+
 			val assetFd = assets.openFd("dataSet.txt")
 			var dataList: List<String> = listOf()
 			assetFd.createInputStream().bufferedReader().useLines {
 				dataList = it.toList()
 			}
 			assetFd.close()
-			
+
 			for (i in dataList) {
 				var comparedData = ""
 				for (j in dataSet) {
@@ -166,20 +166,16 @@ class SumiWindow : AccessibilityService() {
 					dataSet.add(i)
 				}
 			}
-			
-			var outputStr = ""
-			for (i in dataSet) {
-				outputStr += "${i}\n"
-			}
+
 			applicationContext.openFileOutput("data.txt", Context.MODE_PRIVATE).use {
-				it.write(outputStr.toByteArray())
+				it.write(dataSet.joinToString(separator = "\n") { data -> data }.toByteArray())
 			}
 		}
-		
+
 		setScreenSize()
 		setView()
 		setIdMap()
-		
+
 		//The listener when the A~P, Box, Del button is being clicked
 		val chooseListener = View.OnClickListener { view ->
 			if (chooseID != 0) binding.root.findViewById<Button>(chooseID).backgroundTintList = ColorStateList.valueOf(
@@ -187,7 +183,7 @@ class SumiWindow : AccessibilityService() {
 			view.backgroundTintList = ColorStateList.valueOf(getColor(R.color.accent))
 			chooseID = view.id
 		}
-		
+
 		//The listener when the board being clicked
 		val fillListener = View.OnClickListener { view ->
 			if (chooseID != 0) {
@@ -198,7 +194,7 @@ class SumiWindow : AccessibilityService() {
 						refreshView()
 						currentStr = outputText()
 					}
-					
+
 					binding.btnBox.id -> {
 						if ((view as Button).hint == "x") {
 							view.text = binding.btnBox.text
@@ -207,7 +203,7 @@ class SumiWindow : AccessibilityService() {
 							currentStr = outputText()
 						}
 					}
-					
+
 					else              -> {
 						if ((view as Button).hint == "x") {
 							if (inputCounter[chooseID] == 4) {
@@ -224,7 +220,7 @@ class SumiWindow : AccessibilityService() {
 				}
 			}
 		}
-		
+
 		//Set up listener
 		for (i in 0..15) {
 			inputCounter[idMap[i]!!] = 0
@@ -263,14 +259,14 @@ class SumiWindow : AccessibilityService() {
 				getColor(R.color.purple_200))
 			chooseID = 0
 			binding.textViewInfo.text = getString(R.string.text_waiting)
-			
+
 			val inputStr = outputHint()
 			boardStatus = if (MinigamesSolver.cal(inputStr)) 1 else 0
 			if (boardStatus == 1) {
 				if (answerQueue.size > 0) {
 					binding.textViewInfo.text = getString(R.string.text_success)
 					showAnswer(answerQueueInd)
-					
+
 					//Save when the inputStr is completed
 					if (inputStr.filter { c -> c == 'x' }.length < 4) {
 						dataSet.add(formattingStr(inputStr))
@@ -341,7 +337,7 @@ class SumiWindow : AccessibilityService() {
 						}
 					}
 				}
-				
+
 				MotionEvent.ACTION_UP   -> {
 					for (i in 1..6) {
 						for (j in 1..11) {
@@ -364,10 +360,10 @@ class SumiWindow : AccessibilityService() {
 			currentStr = outputText()
 		}
 		binding.textViewMatch.text = getString(R.string.text_match, dataSet.size)
-		
+
 		viewInput()
 	}
-	
+
 	override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
 		//When user clicked the 'Close' button in notification, stop the service
 		if (intent != null) {
@@ -383,15 +379,15 @@ class SumiWindow : AccessibilityService() {
 		}
 		return super.onStartCommand(intent, flags, startId)
 	}
-	
+
 	override fun onAccessibilityEvent(event: AccessibilityEvent?) {
 		//Nothing need to retrieve
 	}
-	
+
 	override fun onInterrupt() {
 		//onInterrupt
 	}
-	
+
 	override fun onDestroy() {
 		super.onDestroy()
 		disableSelf()
@@ -399,7 +395,7 @@ class SumiWindow : AccessibilityService() {
 		windowManager.removeView(iconView)
 		if (isSumiViewShow) windowManager.removeView(sumiView)
 	}
-	
+
 	/**
 	 * Set up the notification
 	 */
@@ -421,7 +417,7 @@ class SumiWindow : AccessibilityService() {
 			ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC)
 		else startForeground(1, builder.build())
 	}
-	
+
 	/**
 	 * Retrieve the actual screen size for auto click feature
 	 */
@@ -438,13 +434,13 @@ class SumiWindow : AccessibilityService() {
 		}
 		if (realWidth < realHeight) realWidth = realHeight.also { realHeight = realWidth }
 	}
-	
+
 	@SuppressLint("InflateParams", "ClickableViewAccessibility")
 	private fun setView() {
 		iconView = (getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(R.layout.sumi_icon, null)
 		sumiView = (getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(R.layout.sumi_layout, null)
 		_binding = SumiLayoutBinding.bind(sumiView)
-		
+
 		//Set the icon's size and position
 		iconLayoutParams = WindowManager.LayoutParams(WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
 			WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, PixelFormat.TRANSPARENT)
@@ -455,7 +451,7 @@ class SumiWindow : AccessibilityService() {
 			this.height = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50F, metrics).roundToInt()
 			this.width = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50F, metrics).roundToInt()
 		}
-		
+
 		//Set the board size and position
 		windowLayoutParams = WindowManager.LayoutParams(WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
 			WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, PixelFormat.RGBA_8888)
@@ -473,10 +469,10 @@ class SumiWindow : AccessibilityService() {
 				this.width = (screenWidth*0.85f).toInt()
 			}
 		}
-		
+
 		//Add view to window
 		windowManager.addView(iconView, iconLayoutParams)
-		
+
 		//Set the icon's style and actions when touched
 		iconView.setBackgroundColor(getColor(R.color.trans))
 		iconView.background = AppCompatResources.getDrawable(this, R.drawable.ic_sumi)
@@ -486,7 +482,7 @@ class SumiWindow : AccessibilityService() {
 			var sy = 0.0
 			var px = 0.0
 			var py = 0.0
-			
+
 			override fun onTouch(v: View?, event: MotionEvent): Boolean {
 				when (event.action) {
 					MotionEvent.ACTION_DOWN -> {
@@ -495,13 +491,13 @@ class SumiWindow : AccessibilityService() {
 						px = event.rawX.toDouble()
 						py = event.rawY.toDouble()
 					}
-					
+
 					MotionEvent.ACTION_MOVE -> {
 						iconLayoutUpdateParams.x = (sx+event.rawX-px).toInt()
 						iconLayoutUpdateParams.y = (sy+event.rawY-py).toInt()
 						windowManager.updateViewLayout(iconView, iconLayoutUpdateParams)
 					}
-					
+
 					MotionEvent.ACTION_UP   -> {
 						if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
 							if (iconLayoutUpdateParams.x in -75..75 && iconLayoutUpdateParams.y in screenHeight/2-300..screenHeight/2) {
@@ -534,7 +530,7 @@ class SumiWindow : AccessibilityService() {
 			}
 		})
 	}
-	
+
 	private fun setIdMap() {
 		idMap[101] = binding.btn101.id
 		idMap[102] = binding.btn102.id
@@ -619,7 +615,7 @@ class SumiWindow : AccessibilityService() {
 		idMap[14] = binding.btnO.id
 		idMap[15] = binding.btnP.id
 	}
-	
+
 	/**
 	 * Refresh the board and update the A~P button status
 	 */
@@ -650,7 +646,7 @@ class SumiWindow : AccessibilityService() {
 		}
 		binding.textViewMatch.text = getString(R.string.text_match, matchData(outputHint()))
 	}
-	
+
 	/**
 	 * Calculate the current board matched the data in data set or not
 	 */
@@ -675,7 +671,7 @@ class SumiWindow : AccessibilityService() {
 					}
 				}
 			}
-			
+
 			val inputMap = mutableMapOf<Char, Char>()
 			for (j in i.indices) {
 				if (!isMatch) break
@@ -694,7 +690,7 @@ class SumiWindow : AccessibilityService() {
 					}
 				}
 			}
-			
+
 			if (isMatch) {
 				matchCount += 1
 				for (j in i.indices) {
@@ -712,7 +708,7 @@ class SumiWindow : AccessibilityService() {
 		}
 		return matchCount
 	}
-	
+
 	/**
 	 * Transform the board-style string into data-style string
 	 */
@@ -723,7 +719,7 @@ class SumiWindow : AccessibilityService() {
 			else  -> inputStr.lowercase()
 		}
 	}
-	
+
 	/**
 	 * Transform the data-style string into board-style string
 	 */
@@ -734,7 +730,7 @@ class SumiWindow : AccessibilityService() {
 			else -> inputChar.uppercase()
 		}
 	}
-	
+
 	/**
 	 * Compare two string and return the smaller one
 	 */
@@ -754,7 +750,7 @@ class SumiWindow : AccessibilityService() {
 		}
 		return if (aStr <= bStr) aStr else bStr
 	}
-	
+
 	/**
 	 * Change the board to input mode
 	 */
@@ -772,7 +768,7 @@ class SumiWindow : AccessibilityService() {
 		binding.btnClose.visibility = View.INVISIBLE
 		binding.textViewMatch.visibility = View.VISIBLE
 	}
-	
+
 	/**
 	 * Change the board to answer mode
 	 */
@@ -792,7 +788,7 @@ class SumiWindow : AccessibilityService() {
 		binding.btnView.visibility = View.INVISIBLE
 		binding.btnApply.visibility = View.INVISIBLE
 	}
-	
+
 	/**
 	 * Show the answer
 	 */
@@ -806,7 +802,7 @@ class SumiWindow : AccessibilityService() {
 				idMap[btnID2]!!).backgroundTintList = ColorStateList.valueOf(getColor(R.color.accent))
 		}
 	}
-	
+
 	/**
 	 * Hide the answer
 	 */
@@ -820,7 +816,7 @@ class SumiWindow : AccessibilityService() {
 				idMap[btnID2]!!).backgroundTintList = ColorStateList.valueOf(getColor(R.color.btn_input))
 		}
 	}
-	
+
 	/**
 	 * Transform board to array
 	 */
@@ -833,7 +829,7 @@ class SumiWindow : AccessibilityService() {
 		}
 		return array
 	}
-	
+
 	/**
 	 * Transform board to data
 	 */
@@ -846,7 +842,7 @@ class SumiWindow : AccessibilityService() {
 		}
 		return str
 	}
-	
+
 	/**
 	 * Format to the smallest string
 	 */
@@ -854,7 +850,7 @@ class SumiWindow : AccessibilityService() {
 		val dataMap = mutableMapOf<Char, Char>()
 		var outputStr = ""
 		var char = 'a'
-		
+
 		for (i in inputStr.indices) {
 			if (inputStr[i] == 'x') outputStr += 'x'
 			else if (inputStr[i] == 'z') outputStr += 'z'
@@ -871,7 +867,7 @@ class SumiWindow : AccessibilityService() {
 		}
 		return outputStr
 	}
-	
+
 	/**
 	 * Check accessibility service is enabled or not
 	 */
@@ -883,7 +879,7 @@ class SumiWindow : AccessibilityService() {
 		}
 		return false
 	}
-	
+
 	/**
 	 * Perform click gesture
 	 */
@@ -901,7 +897,7 @@ class SumiWindow : AccessibilityService() {
 			override fun onCompleted(gestureDescription: GestureDescription?) {
 				super.onCompleted(gestureDescription)
 			}
-			
+
 			override fun onCancelled(gestureDescription: GestureDescription?) {
 				super.onCancelled(gestureDescription)
 			}

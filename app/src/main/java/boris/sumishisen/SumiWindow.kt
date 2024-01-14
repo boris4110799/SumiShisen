@@ -54,6 +54,11 @@ class SumiWindow : Service() {
 	private var isSumiViewShow = false
 
 	/**
+	 * Is currently cooking
+	 */
+	private var isCooking = false
+
+	/**
 	 * Store the button id with map
 	 */
 	private val idMap = mutableMapOf<Int, Int>()
@@ -309,6 +314,20 @@ class SumiWindow : Service() {
 			refreshView()
 			currentStr = outputText()
 		}
+		binding.btnEgg.setOnClickListener {
+			if (isAccessibilityServiceEnabled()) {
+				isSumiViewShow = false
+				isCooking = true
+				windowManager.removeView(sumiView)
+				Thread {
+					sleep(1000)
+					while (isCooking) {
+						sendBroadcast(Intent().setAction(SumiService.ACTION_COOK_EGGS).setPackage(packageName))
+						sleep(10000)
+					}
+				}.start()
+			}
+		}
 		binding.textViewMatch.text = getString(R.string.text_match, dataSet.size)
 
 		viewInput()
@@ -505,6 +524,7 @@ class SumiWindow : Service() {
 								}
 								else {
 									isSumiViewShow = true
+									isCooking = false
 									windowManager.addView(sumiView, windowLayoutParams)
 								}
 								windowManager.updateViewLayout(iconView, iconLayoutUpdateParams)
@@ -687,10 +707,14 @@ class SumiWindow : Service() {
 		if (matchCount == 1) {
 			binding.btnView.visibility = View.VISIBLE
 			binding.btnApply.visibility = View.VISIBLE
+			binding.btnEgg.visibility = View.INVISIBLE
 		}
 		else {
 			binding.btnView.visibility = View.INVISIBLE
 			binding.btnApply.visibility = View.INVISIBLE
+			if (isAccessibilityServiceEnabled()) {
+				binding.btnEgg.visibility = View.VISIBLE
+			}
 		}
 		return matchCount
 	}

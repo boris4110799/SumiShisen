@@ -14,6 +14,7 @@ import java.lang.Thread.sleep
 class SumiService : AccessibilityService() {
 	companion object {
 		const val ACTION_CLICK = "boris.sumishisen.minigames"
+		const val ACTION_COOK_EGGS = "boris.sumishisen.cook_eggs"
 	}
 
 	private lateinit var windowManager: WindowManager
@@ -36,21 +37,36 @@ class SumiService : AccessibilityService() {
 		receiver = object : BroadcastReceiver() {
 			override fun onReceive(context: Context?, intent: Intent?) {
 				if (intent != null) {
-					val x = intent.getIntExtra("x", 1)
-					val y = intent.getIntExtra("y", 1)
-					clickQueue.add(Pair(x, y))
-					if (!isThreadStart) {
-						isThreadStart = true
-						startClickMinigames()
+					when (intent.action) {
+						ACTION_CLICK     -> {
+							val x = intent.getIntExtra("x", 1)
+							val y = intent.getIntExtra("y", 1)
+							clickQueue.add(Pair(x, y))
+							if (!isThreadStart) {
+								isThreadStart = true
+								startClickMinigames()
+							}
+						}
+
+						ACTION_COOK_EGGS -> {
+							if (!isThreadStart) {
+								isThreadStart = true
+								startCookEggs()
+							}
+						}
 					}
 				}
 			}
 		}
+		val intentFilter = IntentFilter().apply {
+			addAction(ACTION_CLICK)
+			addAction(ACTION_COOK_EGGS)
+		}
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-			registerReceiver(receiver, IntentFilter(ACTION_CLICK), RECEIVER_NOT_EXPORTED)
+			registerReceiver(receiver, intentFilter, RECEIVER_NOT_EXPORTED)
 		}
 		else {
-			registerReceiver(receiver, IntentFilter(ACTION_CLICK))
+			registerReceiver(receiver, intentFilter)
 		}
 	}
 
@@ -110,6 +126,49 @@ class SumiService : AccessibilityService() {
 		path.moveTo(px, py)
 		val gestureDescription = GestureDescription.Builder()
 			.addStroke(GestureDescription.StrokeDescription(path, 0, 100L))
+			.build()
+		dispatchGesture(gestureDescription, object : GestureResultCallback() {
+			override fun onCompleted(gestureDescription: GestureDescription?) {
+				super.onCompleted(gestureDescription)
+			}
+
+			override fun onCancelled(gestureDescription: GestureDescription?) {
+				super.onCancelled(gestureDescription)
+			}
+		}, null)
+	}
+
+	/**
+	 * Start cooking eggs
+	 */
+	private fun startCookEggs() {
+		Thread {
+			cookEggs()
+			sleep(8000)
+			isThreadStart = false
+		}.start()
+	}
+
+	/**
+	 * Perform the gesture of cooking eggs and collecting the cooked eggs
+	 */
+	private fun cookEggs() {
+		val cookPath = Path()
+		val collectPath = Path()
+		val eggX = realWidth*0.5f
+		val eggY = realHeight*(920/1080f)
+		val startX = realWidth*(500/2340f)
+		val startY = realHeight*(480/1080f)
+		val endX = realWidth*(1870/2340f)
+		val endY = realHeight*(480/1080f)
+		cookPath.moveTo(eggX, eggY)
+		cookPath.lineTo(startX, startY)
+		cookPath.lineTo(endX, endY)
+		collectPath.moveTo(startX, startY)
+		collectPath.lineTo(endX, endY)
+		val gestureDescription = GestureDescription.Builder()
+			.addStroke(GestureDescription.StrokeDescription(cookPath, 0, 1000L))
+			.addStroke(GestureDescription.StrokeDescription(collectPath, 6500L, 500L))
 			.build()
 		dispatchGesture(gestureDescription, object : GestureResultCallback() {
 			override fun onCompleted(gestureDescription: GestureDescription?) {

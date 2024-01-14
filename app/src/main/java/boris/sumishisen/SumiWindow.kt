@@ -118,57 +118,8 @@ class SumiWindow : Service() {
 		accessibilityManager = getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
 
 		setNotification()
-
-		//If file exist then load data, otherwise create the file
-		if (!applicationContext.getFileStreamPath("data.txt").exists()) {
-			applicationContext.openFileOutput("data.txt", Context.MODE_PRIVATE).use {
-				it.write("".toByteArray())
-			}
-		}
-		else {
-			applicationContext.getFileStreamPath("data.txt").createNewFile()
-			applicationContext.openFileInput("data.txt").bufferedReader().useLines {
-				dataSet.addAll(it)
-			}
-		}
-
-		//If Count not equal to dataSize, which means the new data are in the asset, then add it
-		val sharedPreferences = getSharedPreferences("Data", Context.MODE_PRIVATE)
-		val num = sharedPreferences.getInt("Count", 0)
-		if (num < dataSize) {
-			val editor = sharedPreferences.edit()
-			editor.putInt("Count", dataSize)
-			editor.apply()
-
-			val assetFd = assets.openFd("dataSet.txt")
-			var dataList: List<String> = listOf()
-			assetFd.createInputStream().bufferedReader().useLines {
-				dataList = it.toList()
-			}
-			assetFd.close()
-
-			for (i in dataList) {
-				var comparedData = ""
-				for (j in dataSet) {
-					comparedData = compareStr(i, j)
-					if (comparedData.isNotEmpty()) {
-						if (comparedData == i) {
-							dataSet.remove(j)
-							dataSet.add(i)
-						}
-						break
-					}
-				}
-				if (comparedData.isEmpty()) {
-					dataSet.add(i)
-				}
-			}
-
-			applicationContext.openFileOutput("data.txt", Context.MODE_PRIVATE).use {
-				it.write(dataSet.joinToString(separator = "\n") { data -> data }.toByteArray())
-			}
-		}
-
+		setDataSet()
+		updateDataSet()
 		setView()
 		setIdMap()
 
@@ -370,7 +321,6 @@ class SumiWindow : Service() {
 			if (action != null) {
 				when (action) {
 					actionCLOSE -> {
-						//disableSelf()
 						stopSelf()
 					}
 				}
@@ -385,7 +335,6 @@ class SumiWindow : Service() {
 
 	override fun onDestroy() {
 		super.onDestroy()
-		//disableSelf()
 		stopSelf()
 		windowManager.removeView(iconView)
 		if (isSumiViewShow) windowManager.removeView(sumiView)
@@ -411,6 +360,66 @@ class SumiWindow : Service() {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) startForeground(1, builder.build(),
 			ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC)
 		else startForeground(1, builder.build())
+	}
+
+	/**
+	 * Read data.txt if exist, otherwise create new file
+	 */
+	private fun setDataSet() {
+		//If file exist then load data, otherwise create the file
+		if (applicationContext.getFileStreamPath("data.txt").exists()) {
+			applicationContext.openFileInput("data.txt").bufferedReader().useLines {
+				dataSet.addAll(it)
+			}
+		}
+		else {
+			applicationContext.getFileStreamPath("data.txt").createNewFile()
+			applicationContext.openFileOutput("data.txt", Context.MODE_PRIVATE).use {
+				it.write("".toByteArray())
+			}
+		}
+	}
+
+	/**
+	 * Update and format data
+	 */
+	private fun updateDataSet() {
+		//If Count not equal to dataSize, which means the new data are in the asset, then add it
+		val sharedPreferences = getSharedPreferences("Data", Context.MODE_PRIVATE)
+		val num = sharedPreferences.getInt("Count", 0)
+		if (num < dataSize) {
+			val editor = sharedPreferences.edit()
+			editor.putInt("Count", dataSize)
+			editor.apply()
+
+			val assetFd = assets.openFd("dataSet.txt")
+			var dataList: List<String> = listOf()
+			assetFd.createInputStream().bufferedReader().useLines {
+				dataList = it.toList()
+			}
+			assetFd.close()
+
+			for (i in dataList) {
+				var comparedData = ""
+				for (j in dataSet) {
+					comparedData = compareStr(i, j)
+					if (comparedData.isNotEmpty()) {
+						if (comparedData == i) {
+							dataSet.remove(j)
+							dataSet.add(i)
+						}
+						break
+					}
+				}
+				if (comparedData.isEmpty()) {
+					dataSet.add(i)
+				}
+			}
+
+			applicationContext.openFileOutput("data.txt", Context.MODE_PRIVATE).use {
+				it.write(dataSet.joinToString(separator = "\n") { data -> data }.toByteArray())
+			}
+		}
 	}
 
 	@SuppressLint("InflateParams", "ClickableViewAccessibility")
@@ -477,30 +486,29 @@ class SumiWindow : Service() {
 					}
 
 					MotionEvent.ACTION_UP   -> {
-						if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-							if (iconLayoutUpdateParams.x in -100..100 && iconLayoutUpdateParams.y in screenHeight/2-300..screenHeight/2) {
-								//disableSelf()
-								stopSelf()
-							}
+						if (iconLayoutUpdateParams.x in -100..100 && iconLayoutUpdateParams.y in screenHeight/2-300..screenHeight/2) {
+							stopSelf()
 						}
-						if (iconLayoutUpdateParams.x < 0) {
-							iconLayoutUpdateParams.x = -screenWidth/2
-							windowManager.updateViewLayout(iconView, iconLayoutUpdateParams)
-						}
-						else if (iconLayoutUpdateParams.x >= 0) {
-							iconLayoutUpdateParams.x = screenWidth/2
-							windowManager.updateViewLayout(iconView, iconLayoutUpdateParams)
-						}
-						if (abs(event.rawX.toDouble()-px) < 10 && abs(event.rawY.toDouble()-py) < 10) {
-							if (isSumiViewShow) {
-								isSumiViewShow = false
-								windowManager.removeView(sumiView)
+						else {
+							if (iconLayoutUpdateParams.x < 0) {
+								iconLayoutUpdateParams.x = -screenWidth/2
+								windowManager.updateViewLayout(iconView, iconLayoutUpdateParams)
 							}
-							else {
-								isSumiViewShow = true
-								windowManager.addView(sumiView, windowLayoutParams)
+							else if (iconLayoutUpdateParams.x >= 0) {
+								iconLayoutUpdateParams.x = screenWidth/2
+								windowManager.updateViewLayout(iconView, iconLayoutUpdateParams)
 							}
-							windowManager.updateViewLayout(iconView, iconLayoutUpdateParams)
+							if (abs(event.rawX.toDouble()-px) < 10 && abs(event.rawY.toDouble()-py) < 10) {
+								if (isSumiViewShow) {
+									isSumiViewShow = false
+									windowManager.removeView(sumiView)
+								}
+								else {
+									isSumiViewShow = true
+									windowManager.addView(sumiView, windowLayoutParams)
+								}
+								windowManager.updateViewLayout(iconView, iconLayoutUpdateParams)
+							}
 						}
 					}
 				}

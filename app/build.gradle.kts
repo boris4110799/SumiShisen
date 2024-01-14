@@ -6,17 +6,17 @@ plugins {
 android {
 	namespace = "boris.sumishisen"
 	compileSdk = 34
-	
+
 	defaultConfig {
 		applicationId = "boris.sumishisen"
 		minSdk = 26
 		targetSdk = 34
 		versionCode = 3
 		versionName = "1.6.0"
-		
+
 		testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 	}
-	
+
 	buildTypes {
 		release {
 			isMinifyEnabled = false

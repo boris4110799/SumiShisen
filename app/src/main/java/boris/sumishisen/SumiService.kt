@@ -144,17 +144,17 @@ class SumiService : AccessibilityService() {
 	private fun startCookEggs() {
 		Thread {
 			cookEggs()
-			sleep(8000)
+			sleep(6500)
+			collectEggs()
 			isThreadStart = false
 		}.start()
 	}
 
 	/**
-	 * Perform the gesture of cooking eggs and collecting the cooked eggs
+	 * Perform the gesture of cooking eggs
 	 */
 	private fun cookEggs() {
 		val cookPath = Path()
-		val collectPath = Path()
 		val eggX = realWidth*0.5f
 		val eggY = realHeight*(920/1080f)
 		val startX = realWidth*(500/2340f)
@@ -164,11 +164,33 @@ class SumiService : AccessibilityService() {
 		cookPath.moveTo(eggX, eggY)
 		cookPath.lineTo(startX, startY)
 		cookPath.lineTo(endX, endY)
+		val gestureDescription = GestureDescription.Builder()
+			.addStroke(GestureDescription.StrokeDescription(cookPath, 0, 1000L))
+			.build()
+		dispatchGesture(gestureDescription, object : GestureResultCallback() {
+			override fun onCompleted(gestureDescription: GestureDescription?) {
+				super.onCompleted(gestureDescription)
+			}
+
+			override fun onCancelled(gestureDescription: GestureDescription?) {
+				super.onCancelled(gestureDescription)
+			}
+		}, null)
+	}
+
+	/**
+	 * Perform the gesture of collecting the cooked eggs
+	 */
+	private fun collectEggs() {
+		val collectPath = Path()
+		val startX = realWidth*(500/2340f)
+		val startY = realHeight*(480/1080f)
+		val endX = realWidth*(1870/2340f)
+		val endY = realHeight*(480/1080f)
 		collectPath.moveTo(startX, startY)
 		collectPath.lineTo(endX, endY)
 		val gestureDescription = GestureDescription.Builder()
-			.addStroke(GestureDescription.StrokeDescription(cookPath, 0, 1000L))
-			.addStroke(GestureDescription.StrokeDescription(collectPath, 6500L, 500L))
+			.addStroke(GestureDescription.StrokeDescription(collectPath, 0L, 500L))
 			.build()
 		dispatchGesture(gestureDescription, object : GestureResultCallback() {
 			override fun onCompleted(gestureDescription: GestureDescription?) {

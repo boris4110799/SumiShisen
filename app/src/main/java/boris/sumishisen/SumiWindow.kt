@@ -46,7 +46,7 @@ class SumiWindow : Service() {
 	/**
 	 * The quantity of data
 	 */
-	private val dataSize = 76
+	private val dataSize = 80
 
 	/**
 	 * Is the icon being click
@@ -127,209 +127,7 @@ class SumiWindow : Service() {
 		updateDataSet()
 		setView()
 		setIdMap()
-
-		//The listener when the A~P, Box, Del button is being clicked
-		val chooseListener = View.OnClickListener { view ->
-			if (chooseID != 0) binding.root.findViewById<Button>(chooseID).backgroundTintList = ColorStateList.valueOf(
-				getColor(R.color.purple_200))
-			view.backgroundTintList = ColorStateList.valueOf(getColor(R.color.accent))
-			chooseID = view.id
-		}
-
-		//The listener when the board being clicked
-		val fillListener = View.OnClickListener { view ->
-			if (chooseID != 0) {
-				when (chooseID) {
-					binding.btnDel.id -> {
-						(view as Button).text = "-"
-						view.hint = "x"
-						refreshView()
-						currentStr = outputText()
-					}
-
-					binding.btnBox.id -> {
-						if ((view as Button).hint == "x") {
-							view.text = binding.btnBox.text
-							view.hint = binding.btnBox.hint
-							refreshView()
-							currentStr = outputText()
-						}
-					}
-
-					else              -> {
-						if ((view as Button).hint == "x") {
-							if (inputCounter[chooseID] == 4) {
-								chooseID = 0
-							}
-							else {
-								view.text = binding.root.findViewById<Button>(chooseID).text
-								view.hint = binding.root.findViewById<Button>(chooseID).hint
-								refreshView()
-								currentStr = outputText()
-							}
-						}
-					}
-				}
-			}
-		}
-
-		//Set up listener
-		for (i in 0..15) {
-			inputCounter[idMap[i]!!] = 0
-			binding.root.findViewById<Button>(idMap[i]!!).setOnClickListener(chooseListener)
-		}
-		for (i in 1..6) {
-			for (j in 1..11) {
-				binding.root.findViewById<Button>(idMap[100*i+j]!!).setOnClickListener(fillListener)
-			}
-		}
-		binding.btnBox.setOnClickListener(chooseListener)
-		binding.btnDel.setOnClickListener(chooseListener)
-		//Clear the board when long clicked
-		binding.btnDel.setOnLongClickListener {
-			for (i in 1..6) {
-				for (j in 1..11) {
-					binding.root.findViewById<Button>(idMap[100*i+j]!!).apply {
-						text = "-"
-						hint = "x"
-					}
-				}
-			}
-			for (i in 0..15) {
-				inputCounter[idMap[i]!!] = 0
-				binding.root.findViewById<Button>(idMap[i]!!).visibility = View.VISIBLE
-			}
-			binding.btnView.visibility = View.INVISIBLE
-			binding.btnApply.visibility = View.INVISIBLE
-			refreshView()
-			return@setOnLongClickListener true
-		}
-		//Calculate the answer and show it
-		binding.btnOk.setOnClickListener {
-			viewOutput()
-			if (chooseID != 0) binding.root.findViewById<Button>(chooseID).backgroundTintList = ColorStateList.valueOf(
-				getColor(R.color.purple_200))
-			chooseID = 0
-			binding.textViewInfo.text = getString(R.string.text_waiting)
-
-			val inputStr = outputHint()
-			boardStatus = if (MinigamesSolver.cal(inputStr)) 1 else 0
-			if (boardStatus == 1) {
-				if (answerQueue.size > 0) {
-					binding.textViewInfo.text = getString(R.string.text_success)
-					showAnswer(answerQueueInd)
-
-					//Save when the inputStr is completed
-					if (inputStr.filter { c -> c == 'x' }.length < 4) {
-						dataSet.add(formattingStr(inputStr))
-						var outputStr = ""
-						for (i in dataSet) {
-							outputStr += "${i}\n"
-						}
-						applicationContext.openFileOutput("data.txt", Context.MODE_PRIVATE).use {
-							it.write(outputStr.toByteArray())
-						}
-					}
-				}
-				else boardStatus = 0
-			}
-			if (boardStatus == 0) binding.textViewInfo.text = getString(R.string.text_fail)
-		}
-		//Run auto click
-		binding.btnAuto.setOnClickListener {
-			if (isAccessibilityServiceEnabled()) {
-				isSumiViewShow = false
-				windowManager.removeView(sumiView)
-				Thread {
-					sleep(1000)
-					for (p in answerQueue) {
-						sendBroadcast(Intent().setAction(SumiService.ACTION_CLICK)
-							.setPackage(packageName)
-							.putExtra("x", p.first)
-							.putExtra("y", p.second))
-						sleep(100)
-					}
-				}.start()
-			}
-			else binding.textViewInfo.text = getString(R.string.text_unable)
-		}
-		//Jump to accessibility setting
-		binding.btnAuto.setOnLongClickListener {
-			startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
-			return@setOnLongClickListener true
-		}
-		//Show previous answer
-		binding.btnPre.setOnClickListener {
-			if (boardStatus == 1) {
-				hideAnswer(answerQueueInd)
-				if (answerQueueInd > 0) answerQueueInd -= 1
-				showAnswer(answerQueueInd)
-			}
-		}
-		//Show next answer
-		binding.btnNext.setOnClickListener {
-			if (boardStatus == 1) {
-				hideAnswer(answerQueueInd)
-				if (answerQueueInd < answerQueue.size/2-1) answerQueueInd += 1
-				showAnswer(answerQueueInd)
-			}
-		}
-		//Close the answer mode
-		binding.btnClose.setOnClickListener {
-			viewInput()
-			if (boardStatus == 1) hideAnswer(answerQueueInd)
-			boardStatus = -1
-			answerQueueInd = 0
-			refreshView()
-		}
-		//Preview the match data
-		binding.btnView.setOnTouchListener { _, event ->
-			when (event.action) {
-				MotionEvent.ACTION_DOWN -> {
-					for (i in 1..6) {
-						for (j in 1..11) {
-							binding.root.findViewById<Button>(idMap[100*i+j]!!).text = matchStr[(i-1)*11+j-1]
-						}
-					}
-				}
-
-				MotionEvent.ACTION_UP   -> {
-					for (i in 1..6) {
-						for (j in 1..11) {
-							binding.root.findViewById<Button>(idMap[100*i+j]!!).text = currentStr[(i-1)*11+j-1]
-						}
-					}
-				}
-			}
-			false
-		}
-		//Apply the match data
-		binding.btnApply.setOnClickListener {
-			for (i in 1..6) {
-				for (j in 1..11) {
-					binding.root.findViewById<Button>(idMap[100*i+j]!!).text = matchStr[(i-1)*11+j-1]
-					binding.root.findViewById<Button>(idMap[100*i+j]!!).hint = text2Hint(matchStr[(i-1)*11+j-1])
-				}
-			}
-			refreshView()
-			currentStr = outputText()
-		}
-		binding.btnEgg.setOnClickListener {
-			if (isAccessibilityServiceEnabled()) {
-				isSumiViewShow = false
-				isCooking = true
-				windowManager.removeView(sumiView)
-				Thread {
-					sleep(1000)
-					while (isCooking) {
-						sendBroadcast(Intent().setAction(SumiService.ACTION_COOK_EGGS).setPackage(packageName))
-						sleep(10000)
-					}
-				}.start()
-			}
-		}
-		binding.textViewMatch.text = getString(R.string.text_match, dataSet.size)
-
+		setOnClickListeners()
 		viewInput()
 	}
 
@@ -376,9 +174,12 @@ class SumiWindow : Service() {
 			.setContentText("SumiShisen is running")
 			.setPriority(NotificationCompat.PRIORITY_DEFAULT)
 			.setOngoing(true)
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) startForeground(1, builder.build(),
-			ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC)
-		else startForeground(1, builder.build())
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+			startForeground(1, builder.build(), ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC)
+		}
+		else {
+			startForeground(1, builder.build())
+		}
 	}
 
 	/**
@@ -411,12 +212,12 @@ class SumiWindow : Service() {
 			editor.putInt("Count", dataSize)
 			editor.apply()
 
-			val assetFd = assets.openFd("dataSet.txt")
 			var dataList: List<String> = listOf()
-			assetFd.createInputStream().bufferedReader().useLines {
-				dataList = it.toList()
+			assets.openFd("dataSet.txt").use { fd ->
+				fd.createInputStream().bufferedReader().useLines {
+					dataList = it.toList()
+				}
 			}
-			assetFd.close()
 
 			for (i in dataList) {
 				var comparedData = ""
@@ -443,8 +244,9 @@ class SumiWindow : Service() {
 
 	@SuppressLint("InflateParams", "ClickableViewAccessibility")
 	private fun setView() {
-		iconView = (getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(R.layout.sumi_icon, null)
-		sumiView = (getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(R.layout.sumi_layout, null)
+		val layoutInflater = getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater
+		iconView = layoutInflater.inflate(R.layout.sumi_icon, null)
+		sumiView = layoutInflater.inflate(R.layout.sumi_layout, null)
 		_binding = SumiLayoutBinding.bind(sumiView)
 
 		//Set the icon's size and position
@@ -483,7 +285,7 @@ class SumiWindow : Service() {
 		iconView.setBackgroundColor(getColor(R.color.trans))
 		iconView.background = AppCompatResources.getDrawable(this, R.drawable.ic_sumi)
 		iconView.setOnTouchListener(object : View.OnTouchListener {
-			val iconLayoutUpdateParams: WindowManager.LayoutParams = iconLayoutParams
+			val iconLayoutUpdateParams = iconLayoutParams
 			var sx = 0.0
 			var sy = 0.0
 			var px = 0.0
@@ -499,13 +301,13 @@ class SumiWindow : Service() {
 					}
 
 					MotionEvent.ACTION_MOVE -> {
-						iconLayoutUpdateParams.x = (sx+event.rawX-px).toInt()
-						iconLayoutUpdateParams.y = (sy+event.rawY-py).toInt()
+						iconLayoutUpdateParams.x = (sx + event.rawX - px).toInt()
+						iconLayoutUpdateParams.y = (sy + event.rawY - py).toInt()
 						windowManager.updateViewLayout(iconView, iconLayoutUpdateParams)
 					}
 
 					MotionEvent.ACTION_UP   -> {
-						if (iconLayoutUpdateParams.x in -100..100 && iconLayoutUpdateParams.y in screenHeight/2-300..screenHeight/2) {
+						if (iconLayoutUpdateParams.x in -100..100 && iconLayoutUpdateParams.y in screenHeight/2 - 300..screenHeight/2) {
 							stopSelf()
 						}
 						else {
@@ -517,7 +319,7 @@ class SumiWindow : Service() {
 								iconLayoutUpdateParams.x = screenWidth/2
 								windowManager.updateViewLayout(iconView, iconLayoutUpdateParams)
 							}
-							if (abs(event.rawX.toDouble()-px) < 10 && abs(event.rawY.toDouble()-py) < 10) {
+							if (abs(event.rawX.toDouble() - px) < 10 && abs(event.rawY.toDouble() - py) < 10) {
 								if (isSumiViewShow) {
 									isSumiViewShow = false
 									windowManager.removeView(sumiView)
@@ -622,6 +424,207 @@ class SumiWindow : Service() {
 		idMap[15] = binding.btnP.id
 	}
 
+	private fun setOnClickListeners() {
+		//The listener when the A~P, Box, Del button is being clicked
+		val chooseListener = View.OnClickListener { view ->
+			if (chooseID != 0) binding.root.findViewById<Button>(chooseID).backgroundTintList = ColorStateList.valueOf(
+				getColor(R.color.purple_200))
+			view.backgroundTintList = ColorStateList.valueOf(getColor(R.color.accent))
+			chooseID = view.id
+		}
+
+		//The listener when the board being clicked
+		val fillListener = View.OnClickListener { view ->
+			if (chooseID != 0) {
+				when (chooseID) {
+					binding.btnDel.id -> {
+						(view as Button).text = "-"
+						view.hint = "x"
+						refreshView()
+						currentStr = outputText()
+					}
+
+					binding.btnBox.id -> {
+						if ((view as Button).hint == "x") {
+							view.text = binding.btnBox.text
+							view.hint = binding.btnBox.hint
+							refreshView()
+							currentStr = outputText()
+						}
+					}
+
+					else              -> {
+						if ((view as Button).hint == "x") {
+							if (inputCounter[chooseID] == 4) {
+								chooseID = 0
+							}
+							else {
+								view.text = binding.root.findViewById<Button>(chooseID).text
+								view.hint = binding.root.findViewById<Button>(chooseID).hint
+								refreshView()
+								currentStr = outputText()
+							}
+						}
+					}
+				}
+			}
+		}
+
+		//Set up listener
+		for (i in 0..15) {
+			inputCounter[idMap[i]!!] = 0
+			binding.root.findViewById<Button>(idMap[i]!!).setOnClickListener(chooseListener)
+		}
+		for (i in 1..6) {
+			for (j in 1..11) {
+				binding.root.findViewById<Button>(idMap[100*i + j]!!).setOnClickListener(fillListener)
+			}
+		}
+		binding.btnBox.setOnClickListener(chooseListener)
+		binding.btnDel.setOnClickListener(chooseListener)
+		//Clear the board when long clicked
+		binding.btnDel.setOnLongClickListener {
+			for (i in 1..6) {
+				for (j in 1..11) {
+					binding.root.findViewById<Button>(idMap[100*i + j]!!).apply {
+						text = "-"
+						hint = "x"
+					}
+				}
+			}
+			for (i in 0..15) {
+				inputCounter[idMap[i]!!] = 0
+				binding.root.findViewById<Button>(idMap[i]!!).visibility = View.VISIBLE
+			}
+			binding.btnView.visibility = View.INVISIBLE
+			binding.btnApply.visibility = View.INVISIBLE
+			refreshView()
+			return@setOnLongClickListener true
+		}
+		//Calculate the answer and show it
+		binding.btnOk.setOnClickListener {
+			viewOutput()
+			if (chooseID != 0) binding.root.findViewById<Button>(chooseID).backgroundTintList = ColorStateList.valueOf(
+				getColor(R.color.purple_200))
+			chooseID = 0
+			binding.textViewInfo.text = getString(R.string.text_waiting)
+
+			val inputStr = outputHint()
+			boardStatus = if (MinigamesSolver.cal(inputStr)) 1 else 0
+			if (boardStatus == 1) {
+				if (answerQueue.size > 0) {
+					binding.textViewInfo.text = getString(R.string.text_success)
+					showAnswer(answerQueueInd)
+
+					//Save when the inputStr is completed
+					if (inputStr.filter { c -> c == 'x' }.length < 4) {
+						dataSet.add(formattingStr(inputStr))
+						val outputStr = dataSet.joinToString(separator = "\n")
+						applicationContext.openFileOutput("data.txt", Context.MODE_PRIVATE).use {
+							it.write(outputStr.toByteArray())
+						}
+					}
+				}
+				else boardStatus = 0
+			}
+			if (boardStatus == 0) binding.textViewInfo.text = getString(R.string.text_fail)
+		}
+		//Run auto click
+		binding.btnAuto.setOnClickListener {
+			if (isAccessibilityServiceEnabled()) {
+				isSumiViewShow = false
+				windowManager.removeView(sumiView)
+				Thread {
+					sleep(1000)
+					for (p in answerQueue) {
+						sendBroadcast(Intent().setAction(SumiService.ACTION_CLICK)
+							.setPackage(packageName)
+							.putExtra("x", p.first)
+							.putExtra("y", p.second))
+						sleep(100)
+					}
+				}.start()
+			}
+			else binding.textViewInfo.text = getString(R.string.text_unable)
+		}
+		//Jump to accessibility setting
+		binding.btnAuto.setOnLongClickListener {
+			startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+			return@setOnLongClickListener true
+		}
+		//Show previous answer
+		binding.btnPre.setOnClickListener {
+			if (boardStatus == 1) {
+				hideAnswer(answerQueueInd)
+				if (answerQueueInd > 0) answerQueueInd -= 1
+				showAnswer(answerQueueInd)
+			}
+		}
+		//Show next answer
+		binding.btnNext.setOnClickListener {
+			if (boardStatus == 1) {
+				hideAnswer(answerQueueInd)
+				if (answerQueueInd < answerQueue.size/2 - 1) answerQueueInd += 1
+				showAnswer(answerQueueInd)
+			}
+		}
+		//Close the answer mode
+		binding.btnClose.setOnClickListener {
+			viewInput()
+			if (boardStatus == 1) hideAnswer(answerQueueInd)
+			boardStatus = -1
+			answerQueueInd = 0
+			refreshView()
+		}
+		//Preview the match data
+		binding.btnView.setOnTouchListener { _, event ->
+			when (event.action) {
+				MotionEvent.ACTION_DOWN -> {
+					for (i in 1..6) {
+						for (j in 1..11) {
+							binding.root.findViewById<Button>(idMap[100*i + j]!!).text = matchStr[(i - 1)*11 + j - 1]
+						}
+					}
+				}
+
+				MotionEvent.ACTION_UP   -> {
+					for (i in 1..6) {
+						for (j in 1..11) {
+							binding.root.findViewById<Button>(idMap[100*i + j]!!).text = currentStr[(i - 1)*11 + j - 1]
+						}
+					}
+				}
+			}
+			false
+		}
+		//Apply the match data
+		binding.btnApply.setOnClickListener {
+			for (i in 1..6) {
+				for (j in 1..11) {
+					binding.root.findViewById<Button>(idMap[100*i + j]!!).text = matchStr[(i - 1)*11 + j - 1]
+					binding.root.findViewById<Button>(idMap[100*i + j]!!).hint = text2Hint(matchStr[(i - 1)*11 + j - 1])
+				}
+			}
+			refreshView()
+			currentStr = outputText()
+		}
+		binding.btnCook.setOnClickListener {
+			if (isAccessibilityServiceEnabled()) {
+				isSumiViewShow = false
+				isCooking = true
+				windowManager.removeView(sumiView)
+				Thread {
+					sleep(1000)
+					while (isCooking) {
+						sendBroadcast(Intent().setAction(SumiService.ACTION_COOK_EGGS).setPackage(packageName))
+						sleep(10000)
+					}
+				}.start()
+			}
+		}
+		binding.textViewMatch.text = getString(R.string.text_match, dataSet.size)
+	}
+
 	/**
 	 * Refresh the board and update the A~P button status
 	 */
@@ -632,10 +635,10 @@ class SumiWindow : Service() {
 		}
 		for (i in 1..6) {
 			for (j in 1..11) {
-				val btnInd = binding.root.findViewById<Button>(idMap[100*i+j]!!).hint.toString()[0].minus('a')
+				val btnInd = binding.root.findViewById<Button>(idMap[100*i + j]!!).hint.toString()[0].minus('a')
 				if (btnInd in 0..15) {
 					val btnID = idMap[btnInd]!!
-					inputCounter[btnID] = inputCounter[btnID]!!+1
+					inputCounter[btnID] = inputCounter[btnID]!! + 1
 				}
 			}
 		}
@@ -707,13 +710,13 @@ class SumiWindow : Service() {
 		if (matchCount == 1) {
 			binding.btnView.visibility = View.VISIBLE
 			binding.btnApply.visibility = View.VISIBLE
-			binding.btnEgg.visibility = View.INVISIBLE
+			binding.btnCook.visibility = View.INVISIBLE
 		}
 		else {
 			binding.btnView.visibility = View.INVISIBLE
 			binding.btnApply.visibility = View.INVISIBLE
 			if (isAccessibilityServiceEnabled()) {
-				binding.btnEgg.visibility = View.VISIBLE
+				binding.btnCook.visibility = View.VISIBLE
 			}
 		}
 		return matchCount
@@ -804,8 +807,8 @@ class SumiWindow : Service() {
 	 */
 	private fun showAnswer(ind: Int) {
 		if (ind in 0 until answerQueue.size) {
-			val btnID1 = answerQueue[ind*2].first*100+answerQueue[ind*2].second
-			val btnID2 = answerQueue[ind*2+1].first*100+answerQueue[ind*2+1].second
+			val btnID1 = answerQueue[ind*2].first*100 + answerQueue[ind*2].second
+			val btnID2 = answerQueue[ind*2 + 1].first*100 + answerQueue[ind*2 + 1].second
 			if (idMap.contains(btnID1)) binding.root.findViewById<Button>(
 				idMap[btnID1]!!).backgroundTintList = ColorStateList.valueOf(getColor(R.color.accent))
 			if (idMap.contains(btnID2)) binding.root.findViewById<Button>(
@@ -818,8 +821,8 @@ class SumiWindow : Service() {
 	 */
 	private fun hideAnswer(ind: Int) {
 		if (ind in 0 until answerQueue.size) {
-			val btnID1 = answerQueue[ind*2].first*100+answerQueue[ind*2].second
-			val btnID2 = answerQueue[ind*2+1].first*100+answerQueue[ind*2+1].second
+			val btnID1 = answerQueue[ind*2].first*100 + answerQueue[ind*2].second
+			val btnID2 = answerQueue[ind*2 + 1].first*100 + answerQueue[ind*2 + 1].second
 			if (idMap.contains(btnID1)) binding.root.findViewById<Button>(
 				idMap[btnID1]!!).backgroundTintList = ColorStateList.valueOf(getColor(R.color.btn_input))
 			if (idMap.contains(btnID2)) binding.root.findViewById<Button>(
@@ -834,7 +837,7 @@ class SumiWindow : Service() {
 		val array = Array(66) { "" }
 		for (i in 1..6) {
 			for (j in 1..11) {
-				array[(i-1)*11+j-1] = binding.root.findViewById<Button>(idMap[100*i+j]!!).text.toString()
+				array[(i - 1)*11 + j - 1] = binding.root.findViewById<Button>(idMap[100*i + j]!!).text.toString()
 			}
 		}
 		return array
@@ -847,7 +850,7 @@ class SumiWindow : Service() {
 		var str = ""
 		for (i in 1..6) {
 			for (j in 1..11) {
-				str += binding.root.findViewById<Button>(idMap[100*i+j]!!).hint
+				str += binding.root.findViewById<Button>(idMap[100*i + j]!!).hint
 			}
 		}
 		return str

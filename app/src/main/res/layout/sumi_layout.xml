@@ -1243,7 +1243,7 @@
         app:layout_constraintTop_toBottomOf="@id/btnView" />
 
     <Button
-        android:id="@+id/btnEgg"
+        android:id="@+id/btnCook"
         style="@style/Theme.SumiShisen.Button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

@@ -46,7 +46,7 @@ class SumiWindow : Service() {
 	/**
 	 * The quantity of data
 	 */
-	private val dataSize = 80
+	private val dataSize = 115
 
 	/**
 	 * Is the icon being click
@@ -212,11 +212,9 @@ class SumiWindow : Service() {
 			editor.putInt("Count", dataSize)
 			editor.apply()
 
-			var dataList: List<String> = listOf()
-			assets.openFd("dataSet.txt").use { fd ->
-				fd.createInputStream().bufferedReader().useLines {
-					dataList = it.toList()
-				}
+			var dataList = listOf<String>()
+			assets.open("dataSet.txt").bufferedReader().useLines {
+				dataList = it.toList()
 			}
 
 			for (i in dataList) {
@@ -237,7 +235,7 @@ class SumiWindow : Service() {
 			}
 
 			applicationContext.openFileOutput("data.txt", Context.MODE_PRIVATE).use {
-				it.write(dataSet.joinToString(separator = "\n") { data -> data }.toByteArray())
+				it.write(dataSet.joinToString(separator = "\n").toByteArray())
 			}
 		}
 	}
@@ -307,7 +305,7 @@ class SumiWindow : Service() {
 					}
 
 					MotionEvent.ACTION_UP   -> {
-						if (iconLayoutUpdateParams.x in -100..100 && iconLayoutUpdateParams.y in screenHeight/2 - 300..screenHeight/2) {
+						if (iconLayoutUpdateParams.x in -150..150 && iconLayoutUpdateParams.y in screenHeight/2 - 300..screenHeight/2) {
 							stopSelf()
 						}
 						else {
@@ -427,40 +425,44 @@ class SumiWindow : Service() {
 	private fun setOnClickListeners() {
 		//The listener when the A~P, Box, Del button is being clicked
 		val chooseListener = View.OnClickListener { view ->
-			if (chooseID != 0) binding.root.findViewById<Button>(chooseID).backgroundTintList = ColorStateList.valueOf(
-				getColor(R.color.purple_200))
+			if (chooseID != 0) {
+				binding.root.findViewById<Button>(chooseID).backgroundTintList = ColorStateList.valueOf(
+					getColor(R.color.purple_200))
+			}
 			view.backgroundTintList = ColorStateList.valueOf(getColor(R.color.accent))
 			chooseID = view.id
 		}
 
 		//The listener when the board being clicked
 		val fillListener = View.OnClickListener { view ->
+			val button = view as Button
+
 			if (chooseID != 0) {
 				when (chooseID) {
 					binding.btnDel.id -> {
-						(view as Button).text = "-"
-						view.hint = "x"
+						button.text = "-"
+						button.hint = "x"
 						refreshView()
 						currentStr = outputText()
 					}
 
 					binding.btnBox.id -> {
-						if ((view as Button).hint == "x") {
-							view.text = binding.btnBox.text
-							view.hint = binding.btnBox.hint
+						if (button.hint == "x") {
+							button.text = binding.btnBox.text
+							button.hint = binding.btnBox.hint
 							refreshView()
 							currentStr = outputText()
 						}
 					}
 
 					else              -> {
-						if ((view as Button).hint == "x") {
+						if (button.hint == "x") {
 							if (inputCounter[chooseID] == 4) {
 								chooseID = 0
 							}
 							else {
-								view.text = binding.root.findViewById<Button>(chooseID).text
-								view.hint = binding.root.findViewById<Button>(chooseID).hint
+								button.text = binding.root.findViewById<Button>(chooseID).text
+								button.hint = binding.root.findViewById<Button>(chooseID).hint
 								refreshView()
 								currentStr = outputText()
 							}
@@ -504,8 +506,10 @@ class SumiWindow : Service() {
 		//Calculate the answer and show it
 		binding.btnOk.setOnClickListener {
 			viewOutput()
-			if (chooseID != 0) binding.root.findViewById<Button>(chooseID).backgroundTintList = ColorStateList.valueOf(
-				getColor(R.color.purple_200))
+			if (chooseID != 0) {
+				binding.root.findViewById<Button>(chooseID).backgroundTintList = ColorStateList.valueOf(
+					getColor(R.color.purple_200))
+			}
 			chooseID = 0
 			binding.textViewInfo.text = getString(R.string.text_waiting)
 
@@ -608,7 +612,7 @@ class SumiWindow : Service() {
 			refreshView()
 			currentStr = outputText()
 		}
-		binding.btnCook.setOnClickListener {
+		binding.btnEgg.setOnClickListener {
 			if (isAccessibilityServiceEnabled()) {
 				isSumiViewShow = false
 				isCooking = true
@@ -617,6 +621,20 @@ class SumiWindow : Service() {
 					sleep(1000)
 					while (isCooking) {
 						sendBroadcast(Intent().setAction(SumiService.ACTION_COOK_EGGS).setPackage(packageName))
+						sleep(10000)
+					}
+				}.start()
+			}
+		}
+		binding.btnFries.setOnClickListener {
+			if (isAccessibilityServiceEnabled()) {
+				isSumiViewShow = false
+				isCooking = true
+				windowManager.removeView(sumiView)
+				Thread {
+					sleep(1000)
+					while (isCooking) {
+						sendBroadcast(Intent().setAction(SumiService.ACTION_COOK_FRIES).setPackage(packageName))
 						sleep(10000)
 					}
 				}.start()
@@ -710,13 +728,19 @@ class SumiWindow : Service() {
 		if (matchCount == 1) {
 			binding.btnView.visibility = View.VISIBLE
 			binding.btnApply.visibility = View.VISIBLE
-			binding.btnCook.visibility = View.INVISIBLE
+			binding.btnEgg.visibility = View.INVISIBLE
+			binding.btnFries.visibility = View.INVISIBLE
 		}
 		else {
 			binding.btnView.visibility = View.INVISIBLE
 			binding.btnApply.visibility = View.INVISIBLE
-			if (isAccessibilityServiceEnabled()) {
-				binding.btnCook.visibility = View.VISIBLE
+			if (isAccessibilityServiceEnabled() && outputHint().all { c -> c == 'x' }) {
+				binding.btnEgg.visibility = View.VISIBLE
+				binding.btnFries.visibility = View.VISIBLE
+			}
+			else {
+				binding.btnEgg.visibility = View.INVISIBLE
+				binding.btnFries.visibility = View.INVISIBLE
 			}
 		}
 		return matchCount
@@ -755,10 +779,8 @@ class SumiWindow : Service() {
 			if (compareMap.containsKey(aStr[i])) {
 				if (compareMap[aStr[i]] != bStr[i]) return ""
 			}
-			else {
-				if (bStr[i] != 'x') {
-					compareMap[aStr[i]] = bStr[i]
-				}
+			else if (bStr[i] != 'x') {
+				compareMap[aStr[i]] = bStr[i]
 			}
 		}
 		return if (aStr <= bStr) aStr else bStr

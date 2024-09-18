@@ -1243,15 +1243,28 @@
         app:layout_constraintTop_toBottomOf="@id/btnView" />
 
     <Button
-        android:id="@+id/btnCook"
+        android:id="@+id/btnEgg"
         style="@style/Theme.SumiShisen.Button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="4dp"
         android:layout_marginVertical="8dp"
-        android:text="@string/text_cook"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="@string/text_egg"
+        app:layout_constraintTop_toTopOf="@id/btnView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/ll_btn"
-        app:layout_constraintTop_toBottomOf="@id/btnView" />
+        app:layout_constraintBottom_toBottomOf="@id/btnView" />
+
+    <Button
+        android:id="@+id/btnFries"
+        style="@style/Theme.SumiShisen.Button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="4dp"
+        android:layout_marginVertical="8dp"
+        android:text="@string/text_fries"
+        app:layout_constraintTop_toTopOf="@id/btnApply"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/ll_btn"
+        app:layout_constraintBottom_toBottomOf="@id/btnApply" />
 </androidx.constraintlayout.widget.ConstraintLayout>

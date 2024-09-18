@@ -18,8 +18,8 @@ android {
 		applicationId = "boris.sumishisen"
 		minSdk = 26
 		targetSdk = 34
-		versionCode = 3
-		versionName = "1.8.0"
+		versionCode = 4
+		versionName = "1.9.0"
 
 		testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 	}

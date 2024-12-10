@@ -46,7 +46,7 @@ class SumiWindow : Service() {
 	/**
 	 * The quantity of data
 	 */
-	private val dataSize = 115
+	private val dataSize = 120
 
 	/**
 	 * Is the icon being click
@@ -422,7 +422,8 @@ class SumiWindow : Service() {
 		idMap[15] = binding.btnP.id
 	}
 
-	private fun setOnClickListeners() {
+	@SuppressLint("ClickableViewAccessibility")
+    private fun setOnClickListeners() {
 		//The listener when the A~P, Box, Del button is being clicked
 		val chooseListener = View.OnClickListener { view ->
 			if (chooseID != 0) {
@@ -640,6 +641,20 @@ class SumiWindow : Service() {
 				}.start()
 			}
 		}
+		binding.btnCroquettes.setOnClickListener {
+			if (isAccessibilityServiceEnabled()) {
+				isSumiViewShow = false
+				isCooking = true
+				windowManager.removeView(sumiView)
+				Thread {
+					sleep(1000)
+					while (isCooking) {
+						sendBroadcast(Intent().setAction(SumiService.ACTION_COOK_CROQUETTES).setPackage(packageName))
+						sleep(11000)
+					}
+				}.start()
+			}
+		}
 		binding.textViewMatch.text = getString(R.string.text_match, dataSet.size)
 	}
 
@@ -730,6 +745,7 @@ class SumiWindow : Service() {
 			binding.btnApply.visibility = View.VISIBLE
 			binding.btnEgg.visibility = View.INVISIBLE
 			binding.btnFries.visibility = View.INVISIBLE
+			binding.btnCroquettes.visibility = View.INVISIBLE
 		}
 		else {
 			binding.btnView.visibility = View.INVISIBLE
@@ -737,10 +753,12 @@ class SumiWindow : Service() {
 			if (isAccessibilityServiceEnabled() && outputHint().all { c -> c == 'x' }) {
 				binding.btnEgg.visibility = View.VISIBLE
 				binding.btnFries.visibility = View.VISIBLE
+				binding.btnCroquettes.visibility = View.VISIBLE
 			}
 			else {
 				binding.btnEgg.visibility = View.INVISIBLE
 				binding.btnFries.visibility = View.INVISIBLE
+				binding.btnCroquettes.visibility = View.INVISIBLE
 			}
 		}
 		return matchCount

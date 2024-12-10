@@ -3,13 +3,18 @@ package boris.sumishisen
 import android.accessibilityservice.AccessibilityService
 import android.accessibilityservice.GestureDescription
 import android.annotation.SuppressLint
-import android.content.*
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.graphics.Path
 import android.os.Build
 import android.util.DisplayMetrics
 import android.view.WindowManager
 import android.view.accessibility.AccessibilityEvent
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.lang.Thread.sleep
 
 class SumiService : AccessibilityService() {
@@ -17,6 +22,7 @@ class SumiService : AccessibilityService() {
 		const val ACTION_CLICK = "boris.sumishisen.minigames"
 		const val ACTION_COOK_EGGS = "boris.sumishisen.cook_eggs"
 		const val ACTION_COOK_FRIES = "boris.sumishisen.cook_fries"
+		const val ACTION_COOK_CROQUETTES = "boris.sumishisen.cook_croquettes"
 	}
 
 	private lateinit var windowManager: WindowManager
@@ -30,12 +36,19 @@ class SumiService : AccessibilityService() {
 	private val clickQueue = mutableListOf<Pair<Int, Int>>()
 	private var isThreadStart = false
 
+	private val totalFoodCount = 3
+	private val baseWidth = 2340
+	private val baseHeight = 1080
 	private val panStartX
-		get() = realWidth*(500/2340f)
+		get() = realWidth * (300f / baseWidth)
 	private val panEndX
-		get() = realWidth*(1870/2340f)
+		get() = realWidth * (1870f / baseWidth)
 	private val panY
-		get() = realHeight*(480/1080f)
+		get() = realHeight * (480f / baseHeight)
+	private val middleY
+		get() = realHeight * (560f / baseHeight)
+	private val foodY
+		get() = realHeight * (920f / baseHeight)
 
 	@SuppressLint("UnspecifiedRegisterReceiverFlag")
 	override fun onCreate() {
@@ -47,7 +60,7 @@ class SumiService : AccessibilityService() {
 			override fun onReceive(context: Context?, intent: Intent?) {
 				if (intent != null) {
 					when (intent.action) {
-						ACTION_CLICK     -> {
+						ACTION_CLICK                                                -> {
 							val x = intent.getIntExtra("x", 1)
 							val y = intent.getIntExtra("y", 1)
 							clickQueue.add(Pair(x, y))
@@ -57,7 +70,7 @@ class SumiService : AccessibilityService() {
 							}
 						}
 
-						ACTION_COOK_EGGS, ACTION_COOK_FRIES -> {
+						ACTION_COOK_EGGS, ACTION_COOK_FRIES, ACTION_COOK_CROQUETTES -> {
 							if (!isThreadStart) {
 								isThreadStart = true
 								startCook(intent.action!!)
@@ -71,6 +84,7 @@ class SumiService : AccessibilityService() {
 			addAction(ACTION_CLICK)
 			addAction(ACTION_COOK_EGGS)
 			addAction(ACTION_COOK_FRIES)
+			addAction(ACTION_COOK_CROQUETTES)
 		}
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
 			registerReceiver(receiver, intentFilter, RECEIVER_NOT_EXPORTED)
@@ -117,7 +131,7 @@ class SumiService : AccessibilityService() {
 		CoroutineScope(Dispatchers.Default).launch {
 			while (clickQueue.isNotEmpty()) {
 				sleep(300)
-				val (x, y) = clickQueue.removeFirst()
+				val (x, y) = clickQueue.removeAt(0)
 				clickMinigames(x, y)
 			}
 			isThreadStart = false
@@ -129,10 +143,10 @@ class SumiService : AccessibilityService() {
 	 */
 	private fun clickMinigames(x: Int, y: Int) {
 		val path = Path()
-		var px = realWidth*(300/2340f)
-		var py = realHeight*(145/1080f)
-		px += realWidth*(1452/2340f)/22*(2*y-1)
-		py += realHeight*(790/1080f)/12*(2*x-1)
+		var px = realWidth * (300f / baseWidth)
+		var py = realHeight * (145f / baseHeight)
+		px += realWidth * (1452f / baseWidth) / 22 * (2 * y - 1)
+		py += realHeight * (790f / baseHeight) / 12 * (2 * x - 1)
 		path.moveTo(px, py)
 		performGesture(path, 100)
 	}
@@ -143,13 +157,19 @@ class SumiService : AccessibilityService() {
 	private fun startCook(action: String) {
 		CoroutineScope(Dispatchers.Default).launch {
 			when (action) {
-				ACTION_COOK_EGGS -> {
+				ACTION_COOK_EGGS       -> {
 					cookEggs()
 					sleep(6500)
 				}
-				ACTION_COOK_FRIES -> {
+
+				ACTION_COOK_FRIES      -> {
 					cookFries()
 					sleep(5500)
+				}
+
+				ACTION_COOK_CROQUETTES -> {
+					cookCroquettes()
+					sleep(7500)
 				}
 			}
 			collect()
@@ -157,14 +177,45 @@ class SumiService : AccessibilityService() {
 		}
 	}
 
+	private fun calculateFoodX(index: Int): Float {
+		check(index < totalFoodCount)
+
+		val list = mutableListOf<Float>()
+		val middleX = baseWidth / 2f
+
+		if (totalFoodCount % 2 == 0) {
+			val loop = totalFoodCount / 2
+			var dX = 70
+
+			repeat(loop) {
+				list.add(middleX + dX)
+				list.add(middleX - dX)
+				dX += 140
+			}
+		}
+		else {
+			val loop = (totalFoodCount - 1) / 2
+			var dX = 0
+
+			list.add(middleX)
+			repeat(loop) {
+				dX += 140
+				list.add(middleX + dX)
+				list.add(middleX - dX)
+			}
+		}
+		list.sort()
+		return list[index]
+	}
+
 	/**
 	 * Perform the gesture of cooking eggs
 	 */
 	private fun cookEggs() {
 		val cookPath = Path()
-		val eggX = realWidth*(1100/2340f)
-		val eggY = realHeight*(920/1080f)
-		cookPath.moveTo(eggX, eggY)
+		val eggX = realWidth * (calculateFoodX(0) / baseWidth)
+		cookPath.moveTo(eggX, foodY)
+		cookPath.lineTo(panStartX, middleY)
 		cookPath.lineTo(panStartX, panY)
 		cookPath.lineTo(panEndX, panY)
 		performGesture(cookPath, 1000)
@@ -175,9 +226,22 @@ class SumiService : AccessibilityService() {
 	 */
 	private fun cookFries() {
 		val cookPath = Path()
-		val friesX = realWidth*(1242/2340f)
-		val friesY = realHeight*(920/1080f)
-		cookPath.moveTo(friesX, friesY)
+		val friesX = realWidth * (calculateFoodX(1) / baseWidth)
+		cookPath.moveTo(friesX, foodY)
+		cookPath.lineTo(panStartX, middleY)
+		cookPath.lineTo(panStartX, panY)
+		cookPath.lineTo(panEndX, panY)
+		performGesture(cookPath, 1000)
+	}
+
+	/**
+	 * Perform the gesture of cooking croquettes
+	 */
+	private fun cookCroquettes() {
+		val cookPath = Path()
+		val croquettesX = realWidth * (calculateFoodX(2) / baseWidth)
+		cookPath.moveTo(croquettesX, foodY)
+		cookPath.lineTo(panStartX, middleY)
 		cookPath.lineTo(panStartX, panY)
 		cookPath.lineTo(panEndX, panY)
 		performGesture(cookPath, 1000)

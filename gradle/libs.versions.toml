@@ -1,0 +1,30 @@
+[versions]
+agp = "8.3.0"
+kotlin = "1.9.22"
+appcompat = "1.7.0"
+core = "1.13.0"
+constraintlayout = "2.2.0"
+datastore = "1.1.2"
+lifecycle = "2.8.7"
+material = "1.12.0"
+junit = "4.13.2"
+test = "1.2.1"
+espressoCore = "3.6.1"
+mock = "1.13.16"
+
+[libraries]
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+androidx-core = { group = "androidx.core", name = "core-ktx", version.ref = "core" }
+androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+androidx-datastore = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
+androidx-lifecycle-service = { group = "androidx.lifecycle", name = "lifecycle-service", version.ref = "lifecycle" }
+android-material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+mockK = { group = "io.mockk", name = "mockk-android", version.ref = "mock" }
+androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "test" }
+androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }

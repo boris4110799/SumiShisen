@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<resources>
+
+    <style name="Theme.SumiShisen.Button" parent="Widget.Material3.Button">
+        <item name="android:background">@drawable/btn_design</item>
+        <item name="android:padding">0dp</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/md_theme_onPrimary</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:autoSizeMinTextSize">14sp</item>
+        <item name="android:autoSizeMaxTextSize">18sp</item>
+        <item name="android:autoSizeTextType">uniform</item>
+        <item name="android:elegantTextHeight">true</item>
+    </style>
+
+    <style name="Theme.SumiShisen.Input" parent="Widget.Material3.Button">
+        <item name="android:background">@drawable/input_design</item>
+        <item name="android:padding">0dp</item>
+        <item name="android:layout_margin">2dp</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/md_theme_onSecondary</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:elegantTextHeight">true</item>
+    </style>
+</resources>

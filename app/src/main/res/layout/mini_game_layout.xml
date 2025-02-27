@@ -1,0 +1,1197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animationCache="false"
+    android:background="@drawable/bg_design"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:id="@+id/ll_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="2dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="70dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:paddingVertical="2dp">
+
+            <Button
+                android:id="@+id/btn101"
+                style="@style/Theme.SumiShisen.Input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/text_x"
+                android:text="@string/text_blank"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn102"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn102"
+                style="@style/Theme.SumiShisen.Input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/text_x"
+                android:text="@string/text_blank"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn103"
+                app:layout_constraintStart_toEndOf="@id/btn101"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn103"
+                style="@style/Theme.SumiShisen.Input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/text_x"
+                android:text="@string/text_blank"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn104"
+                app:layout_constraintStart_toEndOf="@id/btn102"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn104"
+                style="@style/Theme.SumiShisen.Input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/text_x"
+                android:text="@string/text_blank"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn105"
+                app:layout_constraintStart_toEndOf="@id/btn103"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn105"
+                style="@style/Theme.SumiShisen.Input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/text_x"
+                android:text="@string/text_blank"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn106"
+                app:layout_constraintStart_toEndOf="@id/btn104"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn106"
+                style="@style/Theme.SumiShisen.Input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/text_x"
+                android:text="@string/text_blank"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn107"
+                app:layout_constraintStart_toEndOf="@id/btn105"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn107"
+                style="@style/Theme.SumiShisen.Input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/text_x"
+                android:text="@string/text_blank"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn108"
+                app:layout_constraintStart_toEndOf="@id/btn106"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn108"
+                style="@style/Theme.SumiShisen.Input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/text_x"
+                android:text="@string/text_blank"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn109"
+                app:layout_constraintStart_toEndOf="@id/btn107"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn109"
+                style="@style/Theme.SumiShisen.Input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/text_x"
+                android:text="@string/text_blank"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn110"
+                app:layout_constraintStart_toEndOf="@id/btn108"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn110"
+                style="@style/Theme.SumiShisen.Input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/text_x"
+                android:text="@string/text_blank"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn111"
+                app:layout_constraintStart_toEndOf="@id/btn109"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn111"
+                style="@style/Theme.SumiShisen.Input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/text_x"
+                android:text="@string/text_blank"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/btn110"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:paddingVertical="2dp">
+
+            <Button
+                android:id="@+id/btn201"
+                style="@style/Theme.SumiShisen.Input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/text_x"
+                android:text="@string/text_blank"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn202"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn202"
+                style="@style/Theme.SumiShisen.Input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/text_x"
+                android:text="@string/text_blank"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn203"
+                app:layout_constraintStart_toEndOf="@id/btn201"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn203"
+                style="@style/Theme.SumiShisen.Input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/text_x"
+                android:text="@string/text_blank"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn204"
+                app:layout_constraintStart_toEndOf="@id/btn202"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn204"
+                style="@style/Theme.SumiShisen.Input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/text_x"
+                android:text="@string/text_blank"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn205"
+                app:layout_constraintStart_toEndOf="@id/btn203"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn205"
+                style="@style/Theme.SumiShisen.Input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/text_x"
+                android:text="@string/text_blank"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn206"
+                app:layout_constraintStart_toEndOf="@id/btn204"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn206"
+                style="@style/Theme.SumiShisen.Input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/text_x"
+                android:text="@string/text_blank"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn207"
+                app:layout_constraintStart_toEndOf="@id/btn205"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn207"
+                style="@style/Theme.SumiShisen.Input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/text_x"
+                android:text="@string/text_blank"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn208"
+                app:layout_constraintStart_toEndOf="@id/btn206"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn208"
+                style="@style/Theme.SumiShisen.Input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/text_x"
+                android:text="@string/text_blank"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn209"
+                app:layout_constraintStart_toEndOf="@id/btn207"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn209"
+                style="@style/Theme.SumiShisen.Input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/text_x"
+                android:text="@string/text_blank"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn210"
+                app:layout_constraintStart_toEndOf="@id/btn208"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn210"
+                style="@style/Theme.SumiShisen.Input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/text_x"
+                android:text="@string/text_blank"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn211"
+                app:layout_constraintStart_toEndOf="@id/btn209"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn211"
+                style="@style/Theme.SumiShisen.Input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/text_x"
+                android:text="@string/text_blank"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/btn210"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:paddingVertical="2dp">
+
+            <Button
+                android:id="@+id/btn301"
+                style="@style/Theme.SumiShisen.Input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/text_x"
+                android:text="@string/text_blank"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn302"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn302"
+                style="@style/Theme.SumiShisen.Input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/text_x"
+                android:text="@string/text_blank"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn303"
+                app:layout_constraintStart_toEndOf="@id/btn301"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn303"
+                style="@style/Theme.SumiShisen.Input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/text_x"
+                android:text="@string/text_blank"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn304"
+                app:layout_constraintStart_toEndOf="@id/btn302"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn304"
+                style="@style/Theme.SumiShisen.Input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/text_x"
+                android:text="@string/text_blank"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn305"
+                app:layout_constraintStart_toEndOf="@id/btn303"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn305"
+                style="@style/Theme.SumiShisen.Input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/text_x"
+                android:text="@string/text_blank"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn306"
+                app:layout_constraintStart_toEndOf="@id/btn304"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn306"
+                style="@style/Theme.SumiShisen.Input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/text_x"
+                android:text="@string/text_blank"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn307"
+                app:layout_constraintStart_toEndOf="@id/btn305"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn307"
+                style="@style/Theme.SumiShisen.Input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/text_x"
+                android:text="@string/text_blank"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn308"
+                app:layout_constraintStart_toEndOf="@id/btn306"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn308"
+                style="@style/Theme.SumiShisen.Input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/text_x"
+                android:text="@string/text_blank"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn309"
+                app:layout_constraintStart_toEndOf="@id/btn307"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn309"
+                style="@style/Theme.SumiShisen.Input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/text_x"
+                android:text="@string/text_blank"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn310"
+                app:layout_constraintStart_toEndOf="@id/btn308"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn310"
+                style="@style/Theme.SumiShisen.Input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/text_x"
+                android:text="@string/text_blank"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn311"
+                app:layout_constraintStart_toEndOf="@id/btn309"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn311"
+                style="@style/Theme.SumiShisen.Input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/text_x"
+                android:text="@string/text_blank"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/btn310"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:paddingVertical="2dp">
+
+            <Button
+                android:id="@+id/btn401"
+                style="@style/Theme.SumiShisen.Input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/text_x"
+                android:text="@string/text_blank"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn402"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn402"
+                style="@style/Theme.SumiShisen.Input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/text_x"
+                android:text="@string/text_blank"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn403"
+                app:layout_constraintStart_toEndOf="@id/btn401"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn403"
+                style="@style/Theme.SumiShisen.Input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/text_x"
+                android:text="@string/text_blank"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn404"
+                app:layout_constraintStart_toEndOf="@id/btn402"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn404"
+                style="@style/Theme.SumiShisen.Input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/text_x"
+                android:text="@string/text_blank"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn405"
+                app:layout_constraintStart_toEndOf="@id/btn403"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn405"
+                style="@style/Theme.SumiShisen.Input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/text_x"
+                android:text="@string/text_blank"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn406"
+                app:layout_constraintStart_toEndOf="@id/btn404"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn406"
+                style="@style/Theme.SumiShisen.Input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/text_x"
+                android:text="@string/text_blank"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn407"
+                app:layout_constraintStart_toEndOf="@id/btn405"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn407"
+                style="@style/Theme.SumiShisen.Input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/text_x"
+                android:text="@string/text_blank"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn408"
+                app:layout_constraintStart_toEndOf="@id/btn406"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn408"
+                style="@style/Theme.SumiShisen.Input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/text_x"
+                android:text="@string/text_blank"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn409"
+                app:layout_constraintStart_toEndOf="@id/btn407"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn409"
+                style="@style/Theme.SumiShisen.Input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/text_x"
+                android:text="@string/text_blank"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn410"
+                app:layout_constraintStart_toEndOf="@id/btn408"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn410"
+                style="@style/Theme.SumiShisen.Input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/text_x"
+                android:text="@string/text_blank"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn411"
+                app:layout_constraintStart_toEndOf="@id/btn409"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn411"
+                style="@style/Theme.SumiShisen.Input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/text_x"
+                android:text="@string/text_blank"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/btn410"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:paddingVertical="2dp">
+
+            <Button
+                android:id="@+id/btn501"
+                style="@style/Theme.SumiShisen.Input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/text_x"
+                android:text="@string/text_blank"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn502"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn502"
+                style="@style/Theme.SumiShisen.Input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/text_x"
+                android:text="@string/text_blank"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn503"
+                app:layout_constraintStart_toEndOf="@id/btn501"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn503"
+                style="@style/Theme.SumiShisen.Input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/text_x"
+                android:text="@string/text_blank"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn504"
+                app:layout_constraintStart_toEndOf="@id/btn502"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn504"
+                style="@style/Theme.SumiShisen.Input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/text_x"
+                android:text="@string/text_blank"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn505"
+                app:layout_constraintStart_toEndOf="@id/btn503"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn505"
+                style="@style/Theme.SumiShisen.Input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/text_x"
+                android:text="@string/text_blank"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn506"
+                app:layout_constraintStart_toEndOf="@id/btn504"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn506"
+                style="@style/Theme.SumiShisen.Input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/text_x"
+                android:text="@string/text_blank"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn507"
+                app:layout_constraintStart_toEndOf="@id/btn505"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn507"
+                style="@style/Theme.SumiShisen.Input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/text_x"
+                android:text="@string/text_blank"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn508"
+                app:layout_constraintStart_toEndOf="@id/btn506"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn508"
+                style="@style/Theme.SumiShisen.Input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/text_x"
+                android:text="@string/text_blank"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn509"
+                app:layout_constraintStart_toEndOf="@id/btn507"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn509"
+                style="@style/Theme.SumiShisen.Input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/text_x"
+                android:text="@string/text_blank"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn510"
+                app:layout_constraintStart_toEndOf="@id/btn508"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn510"
+                style="@style/Theme.SumiShisen.Input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/text_x"
+                android:text="@string/text_blank"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn511"
+                app:layout_constraintStart_toEndOf="@id/btn509"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn511"
+                style="@style/Theme.SumiShisen.Input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                android:hint="@string/text_x"
+                android:text="@string/text_blank"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/btn510"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:paddingVertical="2dp">
+
+            <Button
+                android:id="@+id/btn601"
+                style="@style/Theme.SumiShisen.Input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/text_x"
+                android:text="@string/text_blank"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn602"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn602"
+                style="@style/Theme.SumiShisen.Input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/text_x"
+                android:text="@string/text_blank"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn603"
+                app:layout_constraintStart_toEndOf="@id/btn601"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn603"
+                style="@style/Theme.SumiShisen.Input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/text_x"
+                android:text="@string/text_blank"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn604"
+                app:layout_constraintStart_toEndOf="@id/btn602"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn604"
+                style="@style/Theme.SumiShisen.Input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/text_x"
+                android:text="@string/text_blank"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn605"
+                app:layout_constraintStart_toEndOf="@id/btn603"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn605"
+                style="@style/Theme.SumiShisen.Input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/text_x"
+                android:text="@string/text_blank"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn606"
+                app:layout_constraintStart_toEndOf="@id/btn604"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn606"
+                style="@style/Theme.SumiShisen.Input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/text_x"
+                android:text="@string/text_blank"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn607"
+                app:layout_constraintStart_toEndOf="@id/btn605"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn607"
+                style="@style/Theme.SumiShisen.Input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/text_x"
+                android:text="@string/text_blank"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn608"
+                app:layout_constraintStart_toEndOf="@id/btn606"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn608"
+                style="@style/Theme.SumiShisen.Input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/text_x"
+                android:text="@string/text_blank"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn609"
+                app:layout_constraintStart_toEndOf="@id/btn607"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn609"
+                style="@style/Theme.SumiShisen.Input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/text_x"
+                android:text="@string/text_blank"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn610"
+                app:layout_constraintStart_toEndOf="@id/btn608"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn610"
+                style="@style/Theme.SumiShisen.Input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/text_x"
+                android:text="@string/text_blank"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn611"
+                app:layout_constraintStart_toEndOf="@id/btn609"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn611"
+                style="@style/Theme.SumiShisen.Input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/text_x"
+                android:text="@string/text_blank"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/btn610"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:paddingVertical="2dp">
+
+            <Button
+                android:id="@+id/btn_a"
+                style="@style/Theme.SumiShisen.Button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                android:hint="@string/text_a"
+                android:text="@string/text_A"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn_b"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn_b"
+                style="@style/Theme.SumiShisen.Button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                android:hint="@string/text_b"
+                android:text="@string/text_B"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn_c"
+                app:layout_constraintStart_toEndOf="@id/btn_a"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn_c"
+                style="@style/Theme.SumiShisen.Button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                android:hint="@string/text_c"
+                android:text="@string/text_C"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn_d"
+                app:layout_constraintStart_toEndOf="@id/btn_b"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn_d"
+                style="@style/Theme.SumiShisen.Button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                android:hint="@string/text_d"
+                android:text="@string/text_D"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn_e"
+                app:layout_constraintStart_toEndOf="@id/btn_c"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn_e"
+                style="@style/Theme.SumiShisen.Button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                android:hint="@string/text_e"
+                android:text="@string/text_E"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn_f"
+                app:layout_constraintStart_toEndOf="@id/btn_d"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn_f"
+                style="@style/Theme.SumiShisen.Button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                android:hint="@string/text_f"
+                android:text="@string/text_F"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn_g"
+                app:layout_constraintStart_toEndOf="@id/btn_e"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn_g"
+                style="@style/Theme.SumiShisen.Button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                android:hint="@string/text_g"
+                android:text="@string/text_G"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn_h"
+                app:layout_constraintStart_toEndOf="@id/btn_f"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn_h"
+                style="@style/Theme.SumiShisen.Button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                android:hint="@string/text_h"
+                android:text="@string/text_H"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn_i"
+                app:layout_constraintStart_toEndOf="@id/btn_g"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn_i"
+                style="@style/Theme.SumiShisen.Button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                android:hint="@string/text_i"
+                android:text="@string/text_I"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn_j"
+                app:layout_constraintStart_toEndOf="@id/btn_h"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn_j"
+                style="@style/Theme.SumiShisen.Button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                android:layout_marginStart="4dp"
+                android:hint="@string/text_j"
+                android:text="@string/text_J"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/btn_i"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:paddingVertical="2dp">
+
+            <Button
+                android:id="@+id/btn_k"
+                style="@style/Theme.SumiShisen.Button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                android:hint="@string/text_k"
+                android:text="@string/text_K"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn_l"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn_l"
+                style="@style/Theme.SumiShisen.Button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                android:hint="@string/text_l"
+                android:text="@string/text_L"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn_m"
+                app:layout_constraintStart_toEndOf="@id/btn_k"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn_m"
+                style="@style/Theme.SumiShisen.Button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                android:hint="@string/text_m"
+                android:text="@string/text_M"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn_n"
+                app:layout_constraintStart_toEndOf="@id/btn_l"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn_n"
+                style="@style/Theme.SumiShisen.Button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                android:hint="@string/text_n"
+                android:text="@string/text_N"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn_o"
+                app:layout_constraintStart_toEndOf="@id/btn_m"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn_o"
+                style="@style/Theme.SumiShisen.Button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                android:hint="@string/text_o"
+                android:text="@string/text_O"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn_p"
+                app:layout_constraintStart_toEndOf="@id/btn_n"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn_p"
+                style="@style/Theme.SumiShisen.Button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                android:hint="@string/text_p"
+                android:text="@string/text_P"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn_box"
+                app:layout_constraintStart_toEndOf="@id/btn_o"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn_box"
+                style="@style/Theme.SumiShisen.Button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                android:hint="@string/text_z"
+                android:text="@string/text_box"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn_del"
+                app:layout_constraintStart_toEndOf="@id/btn_p"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn_del"
+                style="@style/Theme.SumiShisen.Button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                android:hint="@string/text_x"
+                android:text="@string/text_del"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn_ok"
+                app:layout_constraintStart_toEndOf="@id/btn_box"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn_ok"
+                style="@style/Theme.SumiShisen.Button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                android:text="@string/text_ok"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/btn_del"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_match"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:autoSizeTextType="none"
+        android:elegantTextHeight="true"
+        android:gravity="center"
+        android:text="@string/text_match"
+        android:textColor="@color/md_theme_onSurface"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@id/btn_view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/ll_btn"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btn_view"
+        style="@style/Theme.SumiShisen.Button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="4dp"
+        android:layout_marginVertical="8dp"
+        android:text="@string/text_view"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@id/btn_apply"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/ll_btn"
+        app:layout_constraintTop_toBottomOf="@id/tv_match" />
+
+    <Button
+        android:id="@+id/btn_apply"
+        style="@style/Theme.SumiShisen.Button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="4dp"
+        android:layout_marginVertical="8dp"
+        android:text="@string/text_apply"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/ll_btn"
+        app:layout_constraintTop_toBottomOf="@id/btn_view" />
+
+    <Button
+        android:id="@+id/btn_back"
+        style="@style/Theme.SumiShisen.Button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="4dp"
+        android:layout_marginVertical="8dp"
+        android:text="@string/text_back"
+        app:layout_constraintBottom_toBottomOf="@id/btn_apply"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/ll_btn"
+        app:layout_constraintTop_toTopOf="@id/btn_apply" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

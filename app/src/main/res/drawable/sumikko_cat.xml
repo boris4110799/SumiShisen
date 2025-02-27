@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="128dp"
+    android:height="128dp"
+    android:tint="#FFFCE5"
+    android:viewportWidth="240"
+    android:viewportHeight="240">
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M80 40
+        C50 20 50 40 55 60C40 100 30 190 70 210C100 220 140 220 170 210C210 190 200 100 185 60C190 40 190 20 160 40C130 30 110 30 80 40z
+        M80 90A4 3 0 0 1 90 90A4 3 0 0 1 80 90z
+        M150 90A4 3 0 0 1 160 90A4 3 0 0 1 150 90z
+        M70 98L80 100L80 102L70 100L70 98z
+        M160 100L170 98L170 100L160 102L160 100z
+        M70 112L80 110L80 112L70 114L70 112z
+        M160 110L170 112L170 114L160 112L160 110z
+        M110 98C115 90 125 90 130 98C141 100 150 125 120 125C 90 125 99 100 110 98z
+        M110 102C100 105 100 123 120 122C140 123 140 105 130 102C125 110 115 110 110 102z
+        M120 150C122 170 90 155 95 152C120 165 123 150 110 140C105 135 118 140 120 150z
+        M120 150C122 140 135 135 130 140C117 150 120 165 145 152C150 155 118 170 120 150z" />
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M170 210C140 220 100 220 70 210C97 220 115 220 100 200C95 190 108 200 110 207C115 218 122 217 125 216C124 208 140 190 135 205C125 215 130 220 170 210z" />
+</vector>

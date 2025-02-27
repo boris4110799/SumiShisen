@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="accessibility_service_description">Enabled this for auto click feature</string>
+
+    <string name="app_name">SumiShisen</string>
+
+    <string name="text_A">A</string>
+    <string name="text_B">B</string>
+    <string name="text_C">C</string>
+    <string name="text_D">D</string>
+    <string name="text_E">E</string>
+    <string name="text_F">F</string>
+    <string name="text_G">G</string>
+    <string name="text_H">H</string>
+    <string name="text_I">I</string>
+    <string name="text_J">J</string>
+    <string name="text_K">K</string>
+    <string name="text_L">L</string>
+    <string name="text_M">M</string>
+    <string name="text_N">N</string>
+    <string name="text_O">O</string>
+    <string name="text_P">P</string>
+    <string name="text_a">a</string>
+    <string name="text_apply">Apply</string>
+    <string name="text_auto">Auto</string>
+    <string name="text_b">b</string>
+    <string name="text_back">Back</string>
+    <string name="text_blank">-</string>
+    <string name="text_box">Box</string>
+    <string name="text_c">c</string>
+    <string name="text_close">Close</string>
+    <string name="text_cook">Cook</string>
+    <string name="text_croquettes">Croquettes</string>
+    <string name="text_d">d</string>
+    <string name="text_del">Del</string>
+    <string name="text_e">e</string>
+    <string name="text_egg">Eggs</string>
+    <string name="text_f">f</string>
+    <string name="text_fail">Fail</string>
+    <string name="text_fries">Fries</string>
+    <string name="text_g">g</string>
+    <string name="text_h">h</string>
+    <string name="text_i">i</string>
+    <string name="text_j">j</string>
+    <string name="text_k">k</string>
+    <string name="text_l">l</string>
+    <string name="text_m">m</string>
+    <string name="text_match">Find\n%1$d\nmatch</string>
+    <string name="text_mini_game">Mini Game</string>
+    <string name="text_n">n</string>
+    <string name="text_next">Next</string>
+    <string name="text_o">o</string>
+    <string name="text_ok">OK</string>
+    <string name="text_p">p</string>
+    <string name="text_pre">Pre</string>
+    <string name="text_special_use">Provide GUI to use the gesture feature from accessibility service</string>
+    <string name="text_success">Success</string>
+    <string name="text_unable">Enable accessibility service for auto click</string>
+    <string name="text_view">View</string>
+    <string name="text_waiting">Waiting…</string>
+    <string name="text_x">x</string>
+    <string name="text_z">z</string>
+</resources>

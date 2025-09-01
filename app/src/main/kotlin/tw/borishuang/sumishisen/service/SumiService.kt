@@ -260,7 +260,7 @@ class SumiService : AccessibilityService() {
         cookPath.lineTo(panStartX, middleY)
         cookPath.lineTo(panStartX, panY)
         cookPath.lineTo(panEndX, panY)
-        performGesture(cookPath, 1000)
+        performGesture(cookPath, 1200)
     }
 
     /**
@@ -274,7 +274,7 @@ class SumiService : AccessibilityService() {
         cookPath.lineTo(panStartX, middleY)
         cookPath.lineTo(panStartX, panY)
         cookPath.lineTo(panEndX, panY)
-        performGesture(cookPath, 1000)
+        performGesture(cookPath, 1300)
     }
 
     /**

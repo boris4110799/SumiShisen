@@ -4,11 +4,11 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.ColorStateList
 import android.view.*
-import android.view.View.OnClickListener
 import android.widget.Button
 import kotlinx.coroutines.*
 import tw.borishuang.sumishisen.R
 import tw.borishuang.sumishisen.databinding.MiniGameLayoutBinding
+import tw.borishuang.sumishisen.enums.PreferencesKey
 import tw.borishuang.sumishisen.matrix.Matrix2D
 import tw.borishuang.sumishisen.minigame.MiniGameUtil
 import tw.borishuang.sumishisen.minigame.forMiniGame
@@ -119,10 +119,10 @@ class MiniGameView(context: Context) : BaseView<MiniGameLayoutBinding>(context) 
         val dataList = FileUtil.readData(context)
 
         CoroutineScope(Dispatchers.IO).launch {
-            val count = DataStoreUtil.readData(context, DataStoreUtil.SUMISHISEN_DATA_COUNT, 0)
+            val count = DataStoreUtil.readData(context, PreferencesKey.SUMISHISEN_DATA_COUNT, 0)
 
             if (count < dataSize) {
-                DataStoreUtil.writeData(context, DataStoreUtil.SUMISHISEN_DATA_COUNT, dataSize)
+                DataStoreUtil.writeData(context, PreferencesKey.SUMISHISEN_DATA_COUNT, dataSize)
 
                 val problems = context.assets.open("mini_game_problems.txt").bufferedReader().useLines {
                     it.toList()
@@ -257,8 +257,8 @@ class MiniGameView(context: Context) : BaseView<MiniGameLayoutBinding>(context) 
             for (i in 0..15) {
                 inputCounter[idMap[i]!!] = 0
             }
-            binding.btnView.visibility = View.INVISIBLE
-            binding.btnApply.visibility = View.INVISIBLE
+            binding.btnView.visibility = INVISIBLE
+            binding.btnApply.visibility = INVISIBLE
             refreshView()
             return@setOnLongClickListener true
         }
@@ -317,24 +317,24 @@ class MiniGameView(context: Context) : BaseView<MiniGameLayoutBinding>(context) 
             if (count >= 4) {
                 findButton(id).apply {
                     backgroundTintList = ColorStateList.valueOf(context.getColor(R.color.md_theme_primary))
-                    visibility = View.INVISIBLE
+                    visibility = INVISIBLE
                 }
             }
             else {
-                findButton(id).visibility = View.VISIBLE
+                findButton(id).visibility = VISIBLE
             }
         }
 
         // Update the match count
         val matchCount = MiniGameUtil.matchData(outputHint(), dataSet, {
             matchMatrix = it
-            binding.btnView.visibility = View.VISIBLE
-            binding.btnApply.visibility = View.VISIBLE
-            binding.btnBack.visibility = View.INVISIBLE
+            binding.btnView.visibility = VISIBLE
+            binding.btnApply.visibility = VISIBLE
+            binding.btnBack.visibility = INVISIBLE
         }, {
-            binding.btnView.visibility = View.INVISIBLE
-            binding.btnApply.visibility = View.INVISIBLE
-            binding.btnBack.visibility = View.VISIBLE
+            binding.btnView.visibility = INVISIBLE
+            binding.btnApply.visibility = INVISIBLE
+            binding.btnBack.visibility = VISIBLE
         })
         binding.tvMatch.text = context.getString(R.string.text_match, matchCount)
     }

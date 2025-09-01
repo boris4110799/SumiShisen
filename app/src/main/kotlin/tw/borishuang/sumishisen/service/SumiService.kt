@@ -9,6 +9,7 @@ import android.util.DisplayMetrics
 import android.view.WindowManager
 import android.view.accessibility.AccessibilityEvent
 import kotlinx.coroutines.*
+import tw.borishuang.sumishisen.enums.PreferencesKey
 import tw.borishuang.sumishisen.manager.BroadcastManager
 import tw.borishuang.sumishisen.manager.startAction
 import tw.borishuang.sumishisen.navigation.NavManager
@@ -59,7 +60,7 @@ class SumiService : AccessibilityService() {
         setBroadcastManager()
 
         CoroutineScope(Dispatchers.Default).launch {
-            DataStoreUtil.createData(this@SumiService, DataStoreUtil.SETTINGS_SHOW_SCREEN, true)
+            DataStoreUtil.createData(this@SumiService, PreferencesKey.SETTINGS_SHOW_SCREEN, true)
         }
     }
 
@@ -170,7 +171,7 @@ class SumiService : AccessibilityService() {
                 clickMiniGame(x, y)
             }
 
-            if (DataStoreUtil.readData(this@SumiService, DataStoreUtil.SETTINGS_SHOW_SCREEN, true)) {
+            if (DataStoreUtil.readData(this@SumiService, PreferencesKey.SETTINGS_SHOW_SCREEN, true)) {
                 startAction(NavManager.ACTION_SHOW_SCREEN)
             }
             else {
@@ -225,7 +226,7 @@ class SumiService : AccessibilityService() {
                 delay(3000)
             }
 
-            if (DataStoreUtil.readData(this@SumiService, DataStoreUtil.SETTINGS_SHOW_SCREEN, true)) {
+            if (DataStoreUtil.readData(this@SumiService, PreferencesKey.SETTINGS_SHOW_SCREEN, true)) {
                 startAction(NavManager.ACTION_SHOW_SCREEN)
             }
             else {
@@ -295,14 +296,6 @@ class SumiService : AccessibilityService() {
             .addStroke(GestureDescription.StrokeDescription(path, 0, duration))
             .build()
 
-        dispatchGesture(gestureDescription, object : GestureResultCallback() {
-            override fun onCompleted(gestureDescription: GestureDescription?) {
-                super.onCompleted(gestureDescription)
-            }
-
-            override fun onCancelled(gestureDescription: GestureDescription?) {
-                super.onCancelled(gestureDescription)
-            }
-        }, null)
+        dispatchGesture(gestureDescription, object : GestureResultCallback() {}, null)
     }
 }

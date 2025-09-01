@@ -7,11 +7,13 @@ import android.util.TypedValue
 import android.view.Gravity
 import android.view.WindowManager
 import kotlinx.coroutines.*
+import tw.borishuang.sumishisen.enums.PreferencesKey
 import tw.borishuang.sumishisen.manager.BroadcastManager
 import tw.borishuang.sumishisen.manager.startAction
 import tw.borishuang.sumishisen.service.SumiService
 import tw.borishuang.sumishisen.service.WindowService
 import tw.borishuang.sumishisen.ui.*
+import tw.borishuang.sumishisen.util.DataStoreUtil
 import kotlin.math.roundToInt
 
 class NavManager(context: Context) : ContextWrapper(context) {
@@ -42,14 +44,14 @@ class NavManager(context: Context) : ContextWrapper(context) {
     private val broadcastManager = object : BroadcastManager() {
         override fun handleIntent(intent: Intent) {
             when (intent.action) {
-                ACTION_SHOW_SCREEN           -> {
+                ACTION_SHOW_SCREEN            -> {
                     isGesturePerform = false
                     showScreen()
                 }
 
-                ACTION_HIDE_SCREEN           -> hideScreen()
-                ACTION_START_PERFORM_GESTURE -> isGesturePerform = true
-                ACTION_STOP_PERFORM_GESTURE  -> isGesturePerform = false
+                ACTION_HIDE_SCREEN            -> hideScreen()
+                ACTION_START_PERFORM_GESTURE  -> isGesturePerform = true
+                ACTION_STOP_PERFORM_GESTURE   -> isGesturePerform = false
                 ACTION_NAVIGATE_SCREEN_SOLVER -> currentScreen = Screens.MiniGameSolver
             }
         }
@@ -152,7 +154,17 @@ class NavManager(context: Context) : ContextWrapper(context) {
 
     private val settingsView = SettingsView(this).apply {
         setLayoutParams(windowLayoutParams)
+        setOnPrivacyClickListener {
+            navigate(Screens.Privacy)
+        }
         setOnBackListener {
+            navigate(Screens.Home)
+        }
+    }
+
+    private val privacyView = PrivacyView(this).apply {
+        setLayoutParams(windowLayoutParams)
+        setOnOkClickListener {
             navigate(Screens.Home)
         }
     }
@@ -165,6 +177,11 @@ class NavManager(context: Context) : ContextWrapper(context) {
             listOf(ACTION_SHOW_SCREEN, ACTION_NAVIGATE_SCREEN_SOLVER, ACTION_HIDE_SCREEN, ACTION_START_PERFORM_GESTURE,
                 ACTION_STOP_PERFORM_GESTURE))
         windowManager.addView(iconView, iconLayoutParams)
+        CoroutineScope(Dispatchers.Main).launch {
+            if (!DataStoreUtil.readData(this@NavManager, PreferencesKey.SHOW_PRIVACY, false)) {
+                currentScreen = Screens.Privacy
+            }
+        }
     }
 
     /**
@@ -208,6 +225,7 @@ class NavManager(context: Context) : ContextWrapper(context) {
                 Screens.MiniGameSolver -> windowManager.addView(miniGameView, windowLayoutParams)
                 Screens.MiniGameResult -> windowManager.addView(resultView, windowLayoutParams)
                 Screens.Settings       -> windowManager.addView(settingsView, windowLayoutParams)
+                Screens.Privacy        -> windowManager.addView(privacyView, windowLayoutParams)
             }
         }
         isScreenShow = true
@@ -223,6 +241,7 @@ class NavManager(context: Context) : ContextWrapper(context) {
                 Screens.MiniGameSolver -> windowManager.removeView(miniGameView)
                 Screens.MiniGameResult -> windowManager.removeView(resultView)
                 Screens.Settings       -> windowManager.removeView(settingsView)
+                Screens.Privacy        -> windowManager.removeView(privacyView)
             }
         }
         isScreenShow = false

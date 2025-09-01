@@ -7,8 +7,7 @@ import androidx.core.net.toUri
 import kotlinx.coroutines.*
 import tw.borishuang.sumishisen.BuildConfig
 import tw.borishuang.sumishisen.databinding.SettingsLayoutBinding
-import tw.borishuang.sumishisen.manager.startAction
-import tw.borishuang.sumishisen.navigation.NavManager
+import tw.borishuang.sumishisen.enums.PreferencesKey
 import tw.borishuang.sumishisen.util.DataStoreUtil
 
 class SettingsView(context: Context) : BaseView<SettingsLayoutBinding>(context) {
@@ -21,19 +20,21 @@ class SettingsView(context: Context) : BaseView<SettingsLayoutBinding>(context) 
 
     init {
         binding.tvVersion.text = BuildConfig.VERSION_NAME
-        binding.ivPrivacyLink.setOnClickListener {
-            context.startAction(NavManager.ACTION_HIDE_SCREEN)
-            context.startActivity(intent)
-        }
 
         CoroutineScope(Dispatchers.IO).launch {
-            binding.switchShowScreen.isChecked = DataStoreUtil.readData(context, DataStoreUtil.SETTINGS_SHOW_SCREEN, true)
+            binding.switchShowScreen.isChecked = DataStoreUtil.readData(context, PreferencesKey.SETTINGS_SHOW_SCREEN, true)
         }
 
         binding.switchShowScreen.setOnCheckedChangeListener { _, isChecked ->
             CoroutineScope(Dispatchers.IO).launch {
-                DataStoreUtil.writeData(context, DataStoreUtil.SETTINGS_SHOW_SCREEN, isChecked)
+                DataStoreUtil.writeData(context, PreferencesKey.SETTINGS_SHOW_SCREEN, isChecked)
             }
+        }
+    }
+
+    fun setOnPrivacyClickListener(onClick: () -> Unit) {
+        binding.ivPrivacyLink.setOnClickListener {
+            onClick()
         }
     }
 

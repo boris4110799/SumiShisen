@@ -14,12 +14,6 @@ import kotlinx.coroutines.withContext
 object DataStoreUtil {
     private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "sumishisen")
 
-    /** The key of data count. */
-    val SUMISHISEN_DATA_COUNT = intPreferencesKey("count")
-
-    /** The key of show screen. */
-    val SETTINGS_SHOW_SCREEN = booleanPreferencesKey("show_screen")
-
     /**
      * Read data from datastore.
      */

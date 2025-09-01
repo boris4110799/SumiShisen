@@ -1,0 +1,33 @@
+<meta name="color-scheme" content="dark light">
+<h1 id="privacy-policy-for-sumishisen">Privacy Policy for SumiShisen</h1>
+<p><strong>Effective Date:</strong> 2025/02/27</p>
+<h2 id="introduction">Introduction</h2>
+<p>This Privacy Policy describes how the SumiShisen mobile application (&quot;the App&quot;) handles your data. We are committed to protecting your privacy and ensuring the security of any information you may provide or that may be accessed by the App. This policy explains what data, if any, we collect, how we use it, and the steps we take to protect it.</p>
+<h2 id="data-collection">Data Collection</h2>
+<p><strong>No Personal Data Collected:</strong> The SumiShisen App does not collect any personally identifiable information (PII) from you. This includes, but is not limited to, your name, email address, phone number, location data, or any other information that could be used to identify you.</p>
+<p><strong>User-Provided Problem Data:</strong> When you use the App&#39;s problem-solver and input a new problem that is not already in the App&#39;s database, this problem data will be stored locally on your device within the App&#39;s internal file system.</p>
+<h2 id="use-of-accessibility-service">Use of Accessibility Service</h2>
+<p><strong>Purpose:</strong> The App utilizes the Android Accessibility Service API solely for the purpose of performing automated click gestures on your device. This functionality is used to provide the &quot;Auto Click&quot; feature, which helps users interact with the Sumikko Farm game more efficiently.</p>
+<p><strong>Data Access Limitation:</strong> We want to emphasize that the Accessibility Service is used exclusively for performing click gestures. The App does not use the Accessibility Service to:</p>
+<ul>
+<li>Collect any data from your device.</li>
+<li>Access or read any content on your screen.</li>
+<li>Transmit any data to external servers or third parties.</li>
+</ul>
+<h2 id="network-usage">Network Usage</h2>
+<p><strong>Offline Operation:</strong> The SumiShisen App is designed to operate entirely offline. It does not require a network connection to function. As a result, the App does not transmit any data to external servers or third parties.</p>
+<h2 id="data-retention">Data Retention</h2>
+<p><strong>User-Provided Problem Data:</strong> When you input a new problem into the App&#39;s problem-solver, this data is stored locally on your device within the App&#39;s internal file system. This data is used to improve the App&#39;s ability to solve problems and provide the &quot;Auto Fill-in&quot; feature.</p>
+<p><strong>Retention Period:</strong> This data is retained indefinitely on your device unless you manually clear the App&#39;s data or uninstall the App.</p>
+<p><strong>Data Deletion:</strong> You can delete this data by clearing the App&#39;s data in your device&#39;s settings or by uninstalling the App.</p>
+<p><strong>No Other Data Retention:</strong> The App does not collect or retain any other data about your usage of the App or your device.</p>
+<h2 id="security">Security</h2>
+<p><strong>Data Security:</strong> We take reasonable measures to protect the data stored within the App&#39;s internal file system. However, because this data is stored locally on your device, its security is also dependent on the security of your device. The App does not transmit this data to any external servers or third parties.</p>
+<h2 id="third-party-services">Third-Party Services</h2>
+<p><strong>No Third-Party Services:</strong> The SumiShisen App does not use any third-party services that collect or process data. This includes analytics services, advertising networks, or any other external services.</p>
+<h2 id="children-s-privacy">Children&#39;s Privacy</h2>
+<p><strong>No Data from Children:</strong> The SumiShisen App does not knowingly collect any information from children under the age of 13. If you believe that we have inadvertently collected information from a child, please contact us immediately.</p>
+<h2 id="changes-to-this-privacy-policy">Changes to This Privacy Policy</h2>
+<p>We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page. You are advised to review this Privacy Policy periodically for any changes. Changes to this Privacy Policy are effective when they are posted on this page.</p>
+<h2 id="contact-us">Contact Us</h2>
+<p>If you have any questions or concerns about this Privacy Policy, please contact us at: boris4110799@gmail.com</p>

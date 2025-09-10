@@ -1,6 +1,16 @@
 # ChangeLog
 
-## Ver. 1.0.0
+## 1.1.0 / 2025-09-10
+
+### Added
+
+- Privacy policy screen and will force to show up at first launched
+
+### Changed
+
+- Adjust the duration of cooking gesture for better stability
+
+## 1.0.0 / 2025-05-01
 
 ### Added
 

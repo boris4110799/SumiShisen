@@ -36,7 +36,7 @@ object PermissionUtil {
             AccessibilityServiceInfo.FEEDBACK_ALL_MASK)
 
         for (serviceInfo in serviceList) {
-            if (serviceInfo.packageNames != null && serviceInfo.packageNames[0] == context.packageName) return true
+            if (serviceInfo.packageNames != null && serviceInfo.packageNames.contains(context.packageName)) return true
         }
         return false
     }

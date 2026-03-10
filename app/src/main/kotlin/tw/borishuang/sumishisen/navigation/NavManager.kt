@@ -35,7 +35,7 @@ class NavManager(context: Context) : ContextWrapper(context) {
     /** Record the current screen. */
     private var currentScreen: Screens = Screens.Home
 
-    /** Is the icon being click. */
+    /** Is the icon being clicked. */
     private var isScreenShow = false
 
     /** Is currently cooking. */
@@ -60,8 +60,11 @@ class NavManager(context: Context) : ContextWrapper(context) {
     /**
      * Set the icon's size and position.
      */
-    private val iconLayoutParams = WindowManager.LayoutParams(WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
-        WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, PixelFormat.TRANSPARENT).apply {
+    private val iconLayoutParams = WindowManager.LayoutParams(
+        WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
+        WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+        PixelFormat.TRANSPARENT
+    ).apply {
         gravity = Gravity.CENTER
         x = screenWidth / 2
         y = -screenHeight / 4
@@ -72,8 +75,11 @@ class NavManager(context: Context) : ContextWrapper(context) {
     /**
      * Set the board size and position.
      */
-    private val windowLayoutParams = WindowManager.LayoutParams(WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
-        WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, PixelFormat.RGBA_8888).apply {
+    private val windowLayoutParams = WindowManager.LayoutParams(
+        WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
+        WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+        PixelFormat.RGBA_8888
+    ).apply {
         gravity = Gravity.CENTER
         x = 0
         y = 0
@@ -173,9 +179,15 @@ class NavManager(context: Context) : ContextWrapper(context) {
      * Initialize the manager.
      */
     fun init() {
-        broadcastManager.register(this,
-            listOf(ACTION_SHOW_SCREEN, ACTION_NAVIGATE_SCREEN_SOLVER, ACTION_HIDE_SCREEN, ACTION_START_PERFORM_GESTURE,
-                ACTION_STOP_PERFORM_GESTURE))
+        broadcastManager.register(
+            this, listOf(
+                ACTION_SHOW_SCREEN,
+                ACTION_NAVIGATE_SCREEN_SOLVER,
+                ACTION_HIDE_SCREEN,
+                ACTION_START_PERFORM_GESTURE,
+                ACTION_STOP_PERFORM_GESTURE
+            )
+        )
         windowManager.addView(iconView, iconLayoutParams)
         CoroutineScope(Dispatchers.Main).launch {
             if (!DataStoreUtil.readData(this@NavManager, PreferencesKey.SHOW_PRIVACY, false)) {
@@ -194,7 +206,7 @@ class NavManager(context: Context) : ContextWrapper(context) {
     }
 
     /**
-     * Set the mini game result view.
+     * Set the mini-game result view.
      */
     private fun setResultView(input: String) {
         resultView = ResultView(this).apply {

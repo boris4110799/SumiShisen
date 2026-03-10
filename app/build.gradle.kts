@@ -6,7 +6,7 @@ plugins {
 }
 
 val keystoreProperties = Properties()
-val keystorePropertiesFile = rootProject.file("keystore.properties")
+val keystorePropertiesFile: File = rootProject.file("keystore.properties")
 keystoreProperties.load(keystorePropertiesFile.inputStream())
 
 android {
@@ -33,6 +33,7 @@ android {
     buildTypes {
         debug {
             isDebuggable = true
+            applicationIdSuffix = ".debug"
             versionNameSuffix = "-debug"
             signingConfig = signingConfigs.getByName("release")
         }

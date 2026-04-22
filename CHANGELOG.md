@@ -1,5 +1,11 @@
 # ChangeLog
 
+## 1.2.0 / 2026-04-22
+
+### Added
+
+- Cooking Salmon
+
 ## 1.1.1 / 2026-03-10
 
 ### Fixed

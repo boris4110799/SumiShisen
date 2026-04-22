@@ -137,6 +137,12 @@ class NavManager(context: Context) : ContextWrapper(context) {
             iconView.setIcon(true)
             startAction(SumiService.ACTION_COOK_CROQUETTES)
         }
+        setOnSalmonClick {
+            hideScreen()
+            isGesturePerform = true
+            iconView.setIcon(true)
+            startAction(SumiService.ACTION_COOK_SALMON)
+        }
         setOnSettingsClick {
             navigate(Screens.Settings)
         }

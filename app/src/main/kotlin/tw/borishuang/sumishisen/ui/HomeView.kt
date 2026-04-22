@@ -15,6 +15,7 @@ class HomeView(context: Context) : BaseView<HomeLayoutBinding>(context) {
         binding.btnEgg.isEnabled = isAccessibilityEnabled
         binding.btnFries.isEnabled = isAccessibilityEnabled
         binding.btnCroquettes.isEnabled = isAccessibilityEnabled
+        binding.btnSalmon.isEnabled = isAccessibilityEnabled
     }
 
     fun setOnMiniGameClick(onClick: () -> Unit) {
@@ -31,6 +32,10 @@ class HomeView(context: Context) : BaseView<HomeLayoutBinding>(context) {
 
     fun setOnCroquettesClick(onClick: () -> Unit) {
         binding.btnCroquettes.setOnClickListener { onClick() }
+    }
+
+    fun setOnSalmonClick(onClick: () -> Unit) {
+        binding.btnSalmon.setOnClickListener { onClick() }
     }
 
     fun setOnSettingsClick(onClick: () -> Unit) {

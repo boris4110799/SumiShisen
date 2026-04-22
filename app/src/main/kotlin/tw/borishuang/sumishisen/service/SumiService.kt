@@ -23,9 +23,10 @@ class SumiService : AccessibilityService() {
         const val ACTION_COOK_EGGS = "SumiService.CookEggs"
         const val ACTION_COOK_FRIES = "SumiService.CookFries"
         const val ACTION_COOK_CROQUETTES = "SumiService.CookCroquettes"
+        const val ACTION_COOK_SALMON = "SumiService.CookSalmon"
         private const val BASE_WIDTH = 2340
         private const val BASE_HEIGHT = 1080
-        private const val TOTAL_FOOD_COUNT = 3
+        private const val TOTAL_FOOD_COUNT = 4
     }
 
     private lateinit var windowManager: WindowManager
@@ -118,15 +119,24 @@ class SumiService : AccessibilityService() {
                         clickQueue.add(Pair(x, y))
                     }
 
-                    ACTION_COOK_EGGS, ACTION_COOK_FRIES, ACTION_COOK_CROQUETTES -> {
+                    ACTION_COOK_EGGS, ACTION_COOK_FRIES, ACTION_COOK_CROQUETTES, ACTION_COOK_SALMON -> {
                         isGesturePerform = true
                         startCook(intent.action!!)
                     }
                 }
             }
         }
-        broadcastManager.register(this,
-            listOf(ACTION_START, ACTION_STOP, ACTION_SUMI, ACTION_COOK_EGGS, ACTION_COOK_FRIES, ACTION_COOK_CROQUETTES))
+        broadcastManager.register(
+            this, listOf(
+                ACTION_START,
+                ACTION_STOP,
+                ACTION_SUMI,
+                ACTION_COOK_EGGS,
+                ACTION_COOK_FRIES,
+                ACTION_COOK_CROQUETTES,
+                ACTION_COOK_SALMON
+            )
+        )
     }
 
     /**
@@ -218,6 +228,11 @@ class SumiService : AccessibilityService() {
                         cookCroquettes()
                         delay(7000)
                     }
+
+                    ACTION_COOK_SALMON -> {
+                        cookSalmon()
+                        delay(6000)
+                    }
                 }
                 // extra delay for collecting
                 delay(500)
@@ -271,6 +286,20 @@ class SumiService : AccessibilityService() {
         val croquettesX = realWidth * (foodPositionList[2] / BASE_WIDTH)
 
         cookPath.moveTo(croquettesX, foodY)
+        cookPath.lineTo(panStartX, middleY)
+        cookPath.lineTo(panStartX, panY)
+        cookPath.lineTo(panEndX, panY)
+        performGesture(cookPath, 1300)
+    }
+
+    /**
+     * Perform the gesture of cooking croquettes.
+     */
+    private fun cookSalmon() {
+        val cookPath = Path()
+        val salmonX = realWidth * (foodPositionList[3] / BASE_WIDTH)
+
+        cookPath.moveTo(salmonX, foodY)
         cookPath.lineTo(panStartX, middleY)
         cookPath.lineTo(panStartX, panY)
         cookPath.lineTo(panEndX, panY)
